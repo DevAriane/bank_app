@@ -18,7 +18,7 @@ class TransactionList extends StatelessWidget {
             style: const TextStyle(color: Color(0xFF8D99AE), fontSize: 14),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
 
           ...card.transactions.map((element) {
             return Padding(

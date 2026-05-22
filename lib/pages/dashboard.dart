@@ -1,16 +1,13 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:bank_app/pages/history_transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:bank_app/common/app_color.dart';
-
 import '../common/cart_widget.dart';
 import '../common/images_resources.dart';
 import '../data/fake_datas.dart';
 import '../utils/number_format.dart';
 import '../common/card_action.dart';
 import '../common/transaction_list.dart';
-import '../models/card_model.dart';
 import 'card_detail.dart';
 
 class Dashboard extends StatefulWidget {
@@ -73,7 +70,6 @@ class _DashboardState extends State<Dashboard>
         backgroundColor: AppColor.noir,
         title: SearchBar(
           constraints: const BoxConstraints(minHeight: 33.0, maxHeight: 33.0),
-
           padding: const WidgetStatePropertyAll(
             EdgeInsets.symmetric(horizontal: 8.0),
           ),
@@ -82,6 +78,11 @@ class _DashboardState extends State<Dashboard>
           hintStyle: const WidgetStatePropertyAll(
             TextStyle(fontSize: 14, color: Colors.white60),
           ),
+
+          textStyle: const WidgetStatePropertyAll(
+            TextStyle(fontSize: 14, color: Colors.white),
+          ),
+
           leading: SvgPicture.asset(
             ImagesResources.search,
             height: 20,
@@ -91,6 +92,7 @@ class _DashboardState extends State<Dashboard>
             ),
           ),
         ),
+
         actions: [
           IconButton(
             onPressed: null,
@@ -243,10 +245,10 @@ class _DashboardState extends State<Dashboard>
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          const Text(
                             "Transactions",
                             style: TextStyle(
                               fontSize: 18,
@@ -254,12 +256,24 @@ class _DashboardState extends State<Dashboard>
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
-                            "View all",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xFF8D99AE),
+
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const HistoryTransaction(),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              "View all",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF8D99AE),
+                              ),
                             ),
                           ),
                         ],
