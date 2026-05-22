@@ -12,4 +12,5 @@ class ImagesResources {
   static const String send = "asset/icons/sended.svg";
   static const String more = "asset/icons/mored.svg";
   static const String master = "asset/icons/mastercard.svg";
+  static const String trait = "asset/icons/trait.svg";
 }

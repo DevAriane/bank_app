@@ -28,7 +28,7 @@ class TransactionList extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
-                      color: Color.fromARGB(
+                      color: const Color.fromARGB(
                         255,
                         228,
                         221,

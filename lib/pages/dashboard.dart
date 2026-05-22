@@ -71,19 +71,23 @@ class _DashboardState extends State<Dashboard>
         bottom: _buildTabBar(),
         automaticallyImplyLeading: false,
         backgroundColor: AppColor.noir,
-        title: SizedBox(
-          height: 40,
-          child: SearchBar(
-            backgroundColor: const WidgetStatePropertyAll(Colors.white12),
-            hintText: 'Search',
+        title: SearchBar(
+          constraints: const BoxConstraints(minHeight: 33.0, maxHeight: 33.0),
 
-            leading: SvgPicture.asset(
-              ImagesResources.search,
-              height: 20,
-              colorFilter: ColorFilter.mode(
-                AppColor.blanc.withAlpha(50),
-                BlendMode.srcIn,
-              ),
+          padding: const WidgetStatePropertyAll(
+            EdgeInsets.symmetric(horizontal: 8.0),
+          ),
+          backgroundColor: const WidgetStatePropertyAll(Colors.white12),
+          hintText: 'Search',
+          hintStyle: const WidgetStatePropertyAll(
+            TextStyle(fontSize: 14, color: Colors.white60),
+          ),
+          leading: SvgPicture.asset(
+            ImagesResources.search,
+            height: 20,
+            colorFilter: ColorFilter.mode(
+              AppColor.blanc.withAlpha(50),
+              BlendMode.srcIn,
             ),
           ),
         ),
@@ -96,7 +100,7 @@ class _DashboardState extends State<Dashboard>
                 AppColor.blanc,
                 BlendMode.srcIn,
               ),
-              height: 24,
+              height: 18,
             ),
           ),
           IconButton(
@@ -107,7 +111,7 @@ class _DashboardState extends State<Dashboard>
                 AppColor.blanc,
                 BlendMode.srcIn,
               ),
-              height: 24,
+              height: 18,
             ),
           ),
         ],
@@ -127,7 +131,12 @@ class _DashboardState extends State<Dashboard>
                     colors: [
                       AppColor.noir,
                       AppColor.bleuSombre,
-                      const Color(0xFF160FE8).withValues(alpha: 0.65),
+                      const Color.fromARGB(
+                        255,
+                        7,
+                        5,
+                        79,
+                      ).withValues(alpha: 0.65),
                       const Color(0xFFA6F2F4).withValues(alpha: 0.40),
                     ],
                     stops: const [0.2, 0.5, 0.8, 1.0],
@@ -204,7 +213,7 @@ class _DashboardState extends State<Dashboard>
                             scrollDirection: Axis.horizontal,
                             itemCount: actionCard.length,
                             separatorBuilder: (context, index) =>
-                                const SizedBox(width: 10),
+                                const SizedBox(width: 15),
                             itemBuilder: (context, index) {
                               final action = actionCard[index];
 

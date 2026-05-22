@@ -26,8 +26,8 @@ class CartWidget extends StatelessWidget {
                 // stops: [0.0, ],
                 colors: [
                   AppColor.noir,
-                  AppColor.noir,
-                  Color.fromARGB(255, 44, 1, 99),
+                  Color.fromARGB(255, 7, 1, 40),
+                  Color.fromARGB(255, 50, 23, 158),
                 ],
               ),
       ),

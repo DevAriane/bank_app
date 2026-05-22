@@ -32,12 +32,29 @@ class Onbording extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
+                      Transform.translate(
+                        offset: const Offset(-150, -140),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            child: Column(
+                              children: [
+                                const Icon(
+                                  Icons.notes,
+                                  color: Color(0xFF000000),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+
                       Center(
                         child: SvgPicture.asset(
                           ImagesResources.logo,
                           width: 180,
                           fit: BoxFit.cover,
-                          colorFilter: ColorFilter.mode(
+                          colorFilter: const ColorFilter.mode(
                             AppColor.noir,
                             BlendMode.srcIn,
                           ),
@@ -113,7 +130,14 @@ class Onbording extends StatelessWidget {
                             );
                           },
 
-                          child: const Text('Become a Customer'),
+                          child: const Text(
+                            'Become a Customer',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1D3557),
+                            ),
+                          ),
                         ),
                       ),
 
@@ -123,7 +147,10 @@ class Onbording extends StatelessWidget {
                           onPressed: () {},
                           child: const Text(
                             'I am Already a customer',
-                            style: TextStyle(color: AppColor.blanc),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColor.blanc,
+                            ),
                           ),
                         ),
                       ),

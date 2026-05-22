@@ -23,17 +23,17 @@ class CardActions extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
-              color: const Color(0xFF1D3557),
+              color: const Color.fromARGB(255, 6, 1, 38),
             ),
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: image.isNotEmpty
                   ? SvgPicture.asset(
                       image,
-                      height: 12,
-                      width: 12,
-                      colorFilter: const ColorFilter.mode(
-                        Color(0XFFFFFFFF),
+                      height: 13,
+                      width: 13,
+                      colorFilter: ColorFilter.mode(
+                        Color(0XFFFFFFFF).withValues(alpha: 0.9),
                         BlendMode.srcIn,
                       ),
                     )
