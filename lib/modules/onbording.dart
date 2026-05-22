@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../common/app_color.dart';
 import '../common/images_resources.dart';
 import 'dashboard/views/dashboard_view.dart';
+import 'package:get_x/get.dart';
 
 class Onbording extends StatelessWidget {
   const Onbording({super.key});
@@ -37,7 +38,7 @@ class Onbording extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
-                            child: Column(
+                            child: const Column(
                               children: [
                                 const Icon(
                                   Icons.notes,
@@ -122,12 +123,7 @@ class Onbording extends StatelessWidget {
                             foregroundColor: AppColor.noir,
                           ),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const Dashboard(),
-                              ),
-                            );
+                            Get.to(() => const Dashboard());
                           },
 
                           child: const Text(

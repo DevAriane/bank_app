@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: ^3.10.3
+  sdk: '>=3.10.3 <4.0.0' # Permet d'accepter les patchs correctifs de Dart
 
 dependencies:
   flutter:
@@ -15,7 +15,6 @@ dependencies:
   intl: ^0.20.2
   objectbox: ^5.3.2
   objectbox_flutter_libs: ^5.3.2
-  objectbox_generator: ^5.3.2
   objectbox_inspector: ^2.1.2
   objectbox_sync_flutter_libs: ^5.3.2
 
@@ -23,11 +22,12 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  build_runner: ^2.4.0 # Version stable standard pour cette version de SDK
+  objectbox_generator: ^5.3.2 # Déplacé ici
 
 flutter:
   uses-material-design: true
 
-
   assets:
-  - asset/icons/
-  - asset/images/
+    - asset/icons/
+    - asset/images/
