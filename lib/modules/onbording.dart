@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../common/app_color.dart';
 import '../common/images_resources.dart';
-import 'dashboard.dart';
+import 'dashboard/views/dashboard_view.dart';
 
 class Onbording extends StatelessWidget {
   const Onbording({super.key});

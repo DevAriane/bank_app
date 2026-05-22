@@ -1,4 +1,4 @@
-import 'package:bank_app/models/card_model.dart';
+import 'package:bank_app/data/models/card_model.dart';
 import '../common/images_resources.dart';
 
 final List<CardModel> fakeCardsList = [

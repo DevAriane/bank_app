@@ -1,14 +1,14 @@
-import 'package:bank_app/pages/history_transaction.dart';
+import 'package:bank_app/modules/history_transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bank_app/common/app_color.dart';
-import '../common/cart_widget.dart';
-import '../common/images_resources.dart';
-import '../data/fake_datas.dart';
-import '../utils/number_format.dart';
-import '../common/card_action.dart';
-import '../common/transaction_list.dart';
-import 'card_detail.dart';
+import '../../../common/cart_widget.dart';
+import '../../../common/images_resources.dart';
+import '../../../data/fake_datas.dart';
+import '../../../utils/number_format.dart';
+import '../../../common/card_action.dart';
+import '../../../common/transaction_list.dart';
+import '../../card_detail.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});

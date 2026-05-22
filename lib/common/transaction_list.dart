@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/card_model.dart';
+import '../data/models/card_model.dart';
 
 class TransactionList extends StatelessWidget {
   final CardModel card;

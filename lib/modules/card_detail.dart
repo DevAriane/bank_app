@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../common/images_resources.dart';
-import '../models/card_model.dart';
+import '../data/models/card_model.dart';
 
 class CardDetail extends StatefulWidget {
   final CardModel card;
