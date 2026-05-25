@@ -1,8 +1,14 @@
-import 'package:get_x/get.dart';
+import 'package:get/get.dart';
 import '../../objectbox.g.dart';
 
-class ObjectboxService extends GetxController {
-  static ObjectboxService get to => Get.find<ObjectboxService>();
+class ObjectBoxService extends GetxController {
+  static ObjectBoxService get to => Get.find<ObjectBoxService>();
 
   late final Store store;
+
+  Future<ObjectBoxService> init() async {
+    store = await openStore();
+
+    return this;
+  }
 }

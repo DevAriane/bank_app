@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../data/models/card_model.dart';
+import '../data/models/card_entity.dart'; 
 
 class TransactionList extends StatelessWidget {
-  final CardModel card;
+  final CardEntity card; 
 
   const TransactionList({super.key, required this.card});
 
@@ -20,7 +20,10 @@ class TransactionList extends StatelessWidget {
 
           const SizedBox(height: 8),
 
+          
           ...card.transactions.map((element) {
+            final isIncome = element.amount > 0;
+
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 4.0),
               child: Row(
@@ -28,40 +31,22 @@ class TransactionList extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
-                      color: const Color.fromARGB(
-                        255,
-                        228,
-                        221,
-                        221,
-                      ).withValues(alpha: 0.2),
+                      color: const Color.fromARGB(255, 228, 221, 221).withValues(alpha: 0.2),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Image.network(
-                        element.imageUrl,
+                      child: Container(
                         width: 15,
                         height: 15,
-                        fit: BoxFit.cover,
-                        errorBuilder:
-                            (
-                              BuildContext context,
-                              Object exception,
-                              StackTrace? stackTrace,
-                            ) {
-                              return Container(
-                                width: 15,
-                                height: 15,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF8D99AE).withAlpha(50),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.person,
-                                  color: Color(0xFF1D3557),
-                                  size: 24,
-                                ),
-                              );
-                            },
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF8D99AE),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          isIncome ? Icons.arrow_downward_rounded : Icons.arrow_upward_rounded,
+                          color: Colors.white,
+                          size: 10,
+                        ),
                       ),
                     ),
                   ),
@@ -73,7 +58,7 @@ class TransactionList extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          element.userName,
+                          element.title, 
                           style: const TextStyle(
                             fontSize: 14,
                             color: Color(0xFF1D3557),
@@ -81,7 +66,7 @@ class TransactionList extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          element.description,
+                          element.category, 
                           style: const TextStyle(
                             fontSize: 12,
                             color: Color(0xFFA2A2A2),
@@ -95,7 +80,7 @@ class TransactionList extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        "\$${element.amount}",
+                        "${isIncome ? '+' : ''}\$${element.amount.toStringAsFixed(2)}",
                         style: const TextStyle(
                           fontSize: 14,
                           color: Color(0xFF1D3557),
@@ -103,10 +88,10 @@ class TransactionList extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "\$${element.amount}",
-                        style: const TextStyle(
+                        "\$${element.amount.toStringAsFixed(2)}",
+                        style: TextStyle(
                           fontSize: 12,
-                          color: Color(0xFF2ECC71),
+                          color: isIncome ? const Color(0xFF2ECC71) : const Color(0xFFE74C3C),
                         ),
                       ),
                     ],
@@ -114,7 +99,7 @@ class TransactionList extends StatelessWidget {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

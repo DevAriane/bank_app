@@ -1,7 +1,6 @@
-import 'package:flutter_svg/svg.dart';
-
-import 'app_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'app_color.dart';
 import './images_resources.dart';
 
 class CartWidget extends StatelessWidget {
@@ -23,12 +22,7 @@ class CartWidget extends StatelessWidget {
                 begin: AlignmentGeometry.topCenter,
                 end: AlignmentGeometry.bottomCenter,
                 transform: GradientRotation(-190),
-                // stops: [0.0, ],
-                colors: [
-                  AppColor.noir,
-                  Color.fromARGB(255, 7, 1, 40),
-                  Color.fromARGB(255, 50, 23, 158),
-                ],
+                colors: [AppColor.noir, Color.fromARGB(255, 7, 1, 40), Color.fromARGB(255, 50, 23, 158)],
               ),
       ),
       child: Column(
@@ -38,14 +32,10 @@ class CartWidget extends StatelessWidget {
             alignment: AlignmentDirectional.topEnd,
             child: SvgPicture.asset(
               ImagesResources.logo,
-              colorFilter: ColorFilter.mode(
-                color != null ? AppColor.noir : AppColor.blanc,
-                BlendMode.srcIn,
-              ),
+              colorFilter: ColorFilter.mode(color != null ? AppColor.noir : AppColor.blanc, BlendMode.srcIn),
               width: 14,
             ),
           ),
-
           Container(
             alignment: AlignmentDirectional.topStart,
             child: Image.asset(ImagesResources.card, height: 6),

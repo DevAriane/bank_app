@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../common/app_color.dart';
 import '../common/images_resources.dart';
 import 'dashboard/views/dashboard_view.dart';
-import 'package:get_x/get.dart';
+import 'package:get/get.dart';
 
 class Onbording extends StatelessWidget {
   const Onbording({super.key});
@@ -35,17 +35,13 @@ class Onbording extends StatelessWidget {
                     children: [
                       Transform.translate(
                         offset: const Offset(-150, -140),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            child: const Column(
-                              children: [
-                                const Icon(
-                                  Icons.notes,
-                                  color: Color(0xFF000000),
-                                ),
-                              ],
-                            ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+
+                          child: Column(
+                            children: [
+                              Icon(Icons.notes, color: Color(0xFF000000)),
+                            ],
                           ),
                         ),
                       ),

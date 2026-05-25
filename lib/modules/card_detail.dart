@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../common/images_resources.dart';
-import '../data/models/card_model.dart';
+import '../data/models/card_entity.dart';
 
 class CardDetail extends StatefulWidget {
-  final CardModel card;
+  final CardEntity card;
   const CardDetail({super.key, required this.card});
 
   @override
@@ -16,6 +16,10 @@ class CardDetail extends StatefulWidget {
 class _CardDetailState extends State<CardDetail> {
   @override
   Widget build(BuildContext context) {
+    final double calculatedBalance = widget.card.transactions.fold<double>(
+      0.0,
+      (sum, transaction) => sum + transaction.amount,
+    );
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
@@ -35,7 +39,6 @@ class _CardDetailState extends State<CardDetail> {
         systemOverlayStyle: SystemUiOverlayStyle.light,
         backgroundColor: const Color(0xFF131D47),
       ),
-
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -43,7 +46,6 @@ class _CardDetailState extends State<CardDetail> {
               Container(
                 width: double.infinity,
                 height: 150,
-
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.vertical(
                     bottom: Radius.circular(20),
@@ -68,7 +70,6 @@ class _CardDetailState extends State<CardDetail> {
                   height: 330,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-
                     gradient: const LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -77,10 +78,8 @@ class _CardDetailState extends State<CardDetail> {
                         Color(0xFF1E105C),
                         Color(0xFF05050A),
                       ],
-
                       stops: [0.4, 0.55, 1.0],
                     ),
-
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.3),
@@ -89,26 +88,23 @@ class _CardDetailState extends State<CardDetail> {
                       ),
                     ],
                   ),
-
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
                       children: [
-                        const Row(
+                        Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
-
                           children: [
-                            Text(
+                            const Text(
                               "**** ",
                               style: TextStyle(color: AppColor.blanc),
                             ),
                             Text(
-                              " 8152",
-                              style: TextStyle(color: AppColor.blanc),
+                              " ${widget.card.cardNumber.substring(widget.card.cardNumber.length - 4)}",
+                              style: const TextStyle(color: AppColor.blanc),
                             ),
                           ],
                         ),
-
                         Center(
                           child: Transform.translate(
                             offset: const Offset(0, 100),
@@ -118,7 +114,6 @@ class _CardDetailState extends State<CardDetail> {
                             ),
                           ),
                         ),
-
                         Transform.translate(
                           offset: const Offset(0, 185),
                           child: Row(
@@ -134,7 +129,6 @@ class _CardDetailState extends State<CardDetail> {
                                   BlendMode.srcIn,
                                 ),
                               ),
-
                               const Text(
                                 "Debit",
                                 style: TextStyle(
@@ -167,135 +161,122 @@ class _CardDetailState extends State<CardDetail> {
 
               Transform.translate(
                 offset: const Offset(0, -385),
-                child: Container(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            width: 24,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF000000),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
 
-                          const SizedBox(width: 6),
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            width: 8,
-                            height: 8,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFF9E9E9E),
-                              shape: BoxShape.circle,
-                            ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          width: 24,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF000000),
+                            borderRadius: BorderRadius.circular(4),
                           ),
-
-                          const SizedBox(width: 6),
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            width: 8,
-                            height: 8,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFE0E0E0),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 10),
-                      Text(
-                        "\$${widget.card.amount}",
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1D3557),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 15,
+                        const SizedBox(width: 6),
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF9E9E9E),
+                            shape: BoxShape.circle,
+                          ),
                         ),
-                        child: Container(
-                          alignment: AlignmentDirectional.topStart,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                        const SizedBox(width: 6),
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFE0E0E0),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
 
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Card info",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF1D3557),
+                    Text(
+                      "\$${calculatedBalance.toStringAsFixed(2)}",
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1D3557),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 15,
+                      ),
+                      child: Container(
+                        alignment: AlignmentDirectional.topStart,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Card info",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF1D3557),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Card number",
+                                  style: TextStyle(color: Color(0xFFA2A2A2)),
                                 ),
-                              ),
-
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    "Card number",
-                                    style: TextStyle(color: Color(0xFFA2A2A2)),
+                                Text(
+                                  widget.card.cardNumber,
+                                  style: const TextStyle(
+                                    color: Color(0xFF1D3557),
                                   ),
-
-                                  Text(
-                                    "\$${widget.card.cardNumber}",
-                                    style: const TextStyle(
-                                      color: Color(0xFF1D3557),
-                                    ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "CVC",
+                                  style: TextStyle(color: Color(0xFFA2A2A2)),
+                                ),
+                                Text(
+                                  widget.card.cvc,
+                                  style: const TextStyle(
+                                    color: Color(0xFF1D3557),
                                   ),
-                                  // Icon(Icons.copy),
-                                ],
-                              ),
-
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    "CVC",
-                                    style: TextStyle(color: Color(0xFFA2A2A2)),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Expiry date ",
+                                  style: TextStyle(color: Color(0xFFA2A2A2)),
+                                ),
+                                Text(
+                                  widget.card.expiryDate,
+                                  style: const TextStyle(
+                                    color: Color(0xFF1D3557),
                                   ),
-                                  Text(
-                                    "\$${widget.card.cvc}",
-                                    style: const TextStyle(
-                                      color: Color(0xFF1D3557),
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    "Expiry date ",
-                                    style: TextStyle(color: Color(0xFFA2A2A2)),
-                                  ),
-                                  Text(
-                                    "\$${widget.card.expiryDate}",
-                                    style: const TextStyle(
-                                      color: Color(0xFF1D3557),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ],
