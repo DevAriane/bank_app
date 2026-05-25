@@ -1,0 +1,141 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:1983023830164191918",
+      "lastPropertyId": "7:7115492839038352350",
+      "name": "CardEntity",
+      "properties": [
+        {
+          "id": "1:2991068622925773667",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8939638582065041628",
+          "name": "cardNumber",
+          "type": 9
+        },
+        {
+          "id": "3:1737532006504336279",
+          "name": "expiryDate",
+          "type": 9
+        },
+        {
+          "id": "4:4712016485363287639",
+          "name": "cvc",
+          "type": 9
+        },
+        {
+          "id": "5:2742521727171442863",
+          "name": "type",
+          "type": 9
+        },
+        {
+          "id": "6:5769820451099573428",
+          "name": "themeColor",
+          "type": 9
+        },
+        {
+          "id": "7:7115492839038352350",
+          "name": "walletId",
+          "indexId": "1:5782537377068367520",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "WalletEntity"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:5824557919156728609",
+      "lastPropertyId": "7:8899025939104159919",
+      "name": "TransactionEntity",
+      "properties": [
+        {
+          "id": "1:5730433394771315683",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1826033378107106400",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:5705987176027675343",
+          "name": "category",
+          "type": 9
+        },
+        {
+          "id": "4:7591427843480241122",
+          "name": "amount",
+          "type": 8
+        },
+        {
+          "id": "5:963323934833465662",
+          "name": "date",
+          "type": 10
+        },
+        {
+          "id": "6:5810493280506337437",
+          "name": "walletId",
+          "indexId": "2:2325352475308693927",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "WalletEntity"
+        },
+        {
+          "id": "7:8899025939104159919",
+          "name": "cardId",
+          "indexId": "3:2359422876437590617",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "CardEntity"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:7375780381033129542",
+      "lastPropertyId": "3:6668714892371084669",
+      "name": "WalletEntity",
+      "properties": [
+        {
+          "id": "1:2853411333254262377",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7483766484453442312",
+          "name": "currency",
+          "indexId": "4:8068262949654632148",
+          "type": 9,
+          "flags": 2080
+        },
+        {
+          "id": "3:6668714892371084669",
+          "name": "balance",
+          "type": 8
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "3:7375780381033129542",
+  "lastIndexId": "4:8068262949654632148",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
