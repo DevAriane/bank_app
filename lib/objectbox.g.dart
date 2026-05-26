@@ -24,7 +24,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(1, 1983023830164191918),
     name: 'CardEntity',
-    lastPropertyId: const obx_int.IdUid(7, 7115492839038352350),
+    lastPropertyId: const obx_int.IdUid(8, 171964542767835083),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -71,6 +71,12 @@ final _entities = <obx_int.ModelEntity>[
         indexId: const obx_int.IdUid(1, 5782537377068367520),
         relationField: 'wallet',
         relationTarget: 'WalletEntity',
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(8, 171964542767835083),
+        name: 'amount',
+        type: 6,
+        flags: 0,
       ),
     ],
     relations: <obx_int.ModelRelation>[],
@@ -259,7 +265,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final cvcOffset = fbb.writeString(object.cvc);
         final typeOffset = fbb.writeString(object.type);
         final themeColorOffset = fbb.writeString(object.themeColor);
-        fbb.startTable(8);
+        fbb.startTable(9);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, cardNumberOffset);
         fbb.addOffset(2, expiryDateOffset);
@@ -267,6 +273,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addOffset(4, typeOffset);
         fbb.addOffset(5, themeColorOffset);
         fbb.addInt64(6, object.wallet.targetId);
+        fbb.addInt64(7, object.amount);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -288,12 +295,19 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final themeColorParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGet(buffer, rootOffset, 14, '');
+        final amountParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          18,
+          0,
+        );
         final object = CardEntity(
           cardNumber: cardNumberParam,
           expiryDate: expiryDateParam,
           cvc: cvcParam,
           type: typeParam,
           themeColor: themeColorParam,
+          amount: amountParam,
         )..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
         object.wallet.targetId = const fb.Int64Reader().vTableGet(
           buffer,
@@ -485,6 +499,11 @@ class CardEntity_ {
   /// See [CardEntity.wallet].
   static final wallet = obx.QueryRelationToOne<CardEntity, WalletEntity>(
     _entities[0].properties[6],
+  );
+
+  /// See [CardEntity.amount].
+  static final amount = obx.QueryIntegerProperty<CardEntity>(
+    _entities[0].properties[7],
   );
 
   /// see [CardEntity.transactions]

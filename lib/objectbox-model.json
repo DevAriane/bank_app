@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:1983023830164191918",
-      "lastPropertyId": "7:7115492839038352350",
+      "lastPropertyId": "8:171964542767835083",
       "name": "CardEntity",
       "properties": [
         {
@@ -46,6 +46,11 @@
           "type": 11,
           "flags": 520,
           "relationTarget": "WalletEntity"
+        },
+        {
+          "id": "8:171964542767835083",
+          "name": "amount",
+          "type": 6
         }
       ],
       "relations": []

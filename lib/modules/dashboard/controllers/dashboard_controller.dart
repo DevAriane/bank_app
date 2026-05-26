@@ -32,16 +32,36 @@ class DashboardController extends GetxController {
   void _initDatabaseStreams() {
     final store = ObjectBoxService.to.store;
 
+    if (_walletBox.isEmpty()) {
+      _walletBox.putMany([
+        WalletEntity(currency: 'USD', balance: 2500.0),
+        WalletEntity(currency: 'EUR', balance: 1200.0),
+        WalletEntity(currency: 'CNY', balance: 8000.0),
+        WalletEntity(currency: 'CMR', balance: 120000.0),
+      ]);
+    }
+
     wallets.assignAll(_walletBox.getAll());
-    cards.assignAll(_cardBox.getAll());
-    _updateTransactionsList();
+
+    final initialCards = _cardBox.getAll();
+    cards.assignAll(initialCards);
+
+    if (initialCards.isNotEmpty) {
+      updateSelectedCard(initialCards.first);
+    } else {
+      if (wallets.isNotEmpty) {
+        selectedWallet.value = wallets.first;
+      }
+      _updateTransactionsList();
+    }
 
     store.watch<WalletEntity>().listen((_) {
       wallets.assignAll(_walletBox.getAll());
     });
 
     store.watch<CardEntity>().listen((_) {
-      cards.assignAll(_cardBox.getAll());
+      final updatedCards = _cardBox.getAll();
+      cards.assignAll(updatedCards);
     });
 
     store.watch<TransactionEntity>().listen((_) {
@@ -89,16 +109,27 @@ class DashboardController extends GetxController {
     }
   }
 
-  void createNewCard({required String currency, required String color}) {
+  void createNewCard({
+    required String currency,
+    required String color,
+    required int amount,
+  }) {
     var wallet = _walletBox
         .query(WalletEntity_.currency.equals(currency))
         .build()
         .findFirst();
 
     if (wallet == null) {
-      wallet = WalletEntity(currency: currency, balance: 0.0);
-      _walletBox.put(wallet);
+      Get.snackbar("error", "porte feuille introuvable");
+      return;
     }
+
+    if (wallet.balance < amount) {
+      Get.snackbar("Error", "votre portefeuille est insuffisant ");
+      return;
+    }
+
+    wallet.balance -= amount;
 
     final newCard = CardEntity(
       cardNumber: "5231 7252 1769 ${1000 + cards.length}",
@@ -106,6 +137,7 @@ class DashboardController extends GetxController {
       cvc: "123",
       type: "Debit",
       themeColor: color,
+      amount: amount,
     );
 
     newCard.wallet.target = wallet;

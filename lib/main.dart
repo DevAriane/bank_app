@@ -3,11 +3,12 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'modules/onbording.dart';
 import 'objectbox.g.dart';
+import './data/services/objectbox_service.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final store = openStore();
-  Get.put(store);
+
+  await Get.putAsync<ObjectBoxService>(() async => ObjectBoxService().init());
   runApp(const MainApp());
 }
 
@@ -16,7 +17,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Banking App",
       theme: ThemeData(textTheme: GoogleFonts.interTextTheme()),

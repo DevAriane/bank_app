@@ -6,14 +6,20 @@ class CardActions extends StatelessWidget {
   final String image;
   final VoidCallback? onTap;
 
-  const CardActions({super.key, required this.title, required this.image, this.onTap});
+  const CardActions({
+    super.key,
+    required this.title,
+    required this.image,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 88,
+        width: 80,
+
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),
@@ -33,8 +39,8 @@ class CardActions extends StatelessWidget {
                 child: image.isNotEmpty
                     ? SvgPicture.asset(
                         image,
-                        height: 13,
-                        width: 13,
+                        height: 6,
+
                         colorFilter: ColorFilter.mode(
                           const Color(0XFFFFFFFF).withValues(alpha: 0.9),
                           BlendMode.srcIn,
@@ -46,7 +52,11 @@ class CardActions extends StatelessWidget {
             const SizedBox(height: 30),
             Text(
               title,
-              style: const TextStyle(color: Color(0xFF1D3557), fontSize: 9, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                color: Color(0xFF1D3557),
+                fontSize: 9,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
