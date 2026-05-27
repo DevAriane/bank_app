@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'modules/onbording.dart';
-import 'objectbox.g.dart';
 import './data/services/objectbox_service.dart';
 
 void main() async {

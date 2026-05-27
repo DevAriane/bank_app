@@ -8,10 +8,8 @@ import '../../../common/cart_widget.dart';
 import '../../../common/images_resources.dart';
 import '../../../utils/number_format.dart';
 import '../../../common/card_action.dart';
-import '../../../common/transaction_list.dart';
 import '../../.././widget/bottom_show_bar.dart';
 import '../../card_detail.dart';
-
 
 class Dashboard extends GetView<DashboardController> {
   const Dashboard({super.key});
@@ -22,8 +20,6 @@ class Dashboard extends GetView<DashboardController> {
         return '€';
       case 'CNY':
         return '¥';
-      // case 'CMR':
-      // return 'FCFA';
       default:
         return '\$';
     }
@@ -34,14 +30,13 @@ class Dashboard extends GetView<DashboardController> {
       case 'EUR':
         return ImagesResources.eur;
       case 'CNY':
-        // return ImagesResources.china;
-        // case 'CMR':
         return ImagesResources.china;
       default:
         return ImagesResources.usa;
     }
   }
 
+  @override
   DashboardController get controller => Get.put(DashboardController());
 
   List<dynamic> get localActionCard => [
@@ -50,202 +45,23 @@ class Dashboard extends GetView<DashboardController> {
     _ActionModel(title: 'Bill', image: ImagesResources.logo),
   ];
 
-  void _showCreateCardDialog(BuildContext context, dynamic currentWallet) {
-    final TextEditingController amountController = TextEditingController();
-    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-    final List<String> availableColors = [
-      "0xFF070128",
-      "0xFF1B4332",
-      "0xFF5C0632",
-      "0xFF2B2D42",
-    ];
-
-    String selectedColor = availableColors.first;
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              backgroundColor: const Color(0xFF151522),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-
-              title: const Text(
-                "Nouvelle Carte Bancaire",
-                style: TextStyle(
-                  color: AppColor.blanc,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              content: Form(
-                key: formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Solde dispo : ${formatDouble(currentWallet.balance)} ${currentWallet.currency}",
-                      style: const TextStyle(
-                        color: Colors.white60,
-                        fontSize: 13,
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-
-                    TextFormField(
-                      controller: amountController,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      style: const TextStyle(color: AppColor.blanc),
-
-                      decoration: InputDecoration(
-                        labelText:
-                            "Montant à allouer (${currentWallet.currency})",
-                        labelStyle: const TextStyle(color: Colors.white70),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white24),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.blueAccent,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.redAccent),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.redAccent),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return "Veuillez entrer un montant";
-                        }
-                        final parsedAmount = double.tryParse(value);
-                        if (parsedAmount == null || parsedAmount <= 0) {
-                          return "Veuillez entrer un montant valide";
-                        }
-                        if (parsedAmount > currentWallet.balance) {
-                          return "Solde insuffisant dans votre portefeuille";
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 20),
-
-                    const Text(
-                      "Choisir la couleur de la carte :",
-                      style: TextStyle(color: Colors.white70, fontSize: 14),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      height: 45,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: availableColors.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 12),
-                        itemBuilder: (context, colorIndex) {
-                          final colorHex = availableColors[colorIndex];
-                          final isSelected = selectedColor == colorHex;
-                          return GestureDetector(
-                            onTap: () {
-                              setDialogState(() {
-                                selectedColor = colorHex;
-                              });
-                            },
-                            child: Container(
-                              width: 45,
-                              decoration: BoxDecoration(
-                                color: Color(int.parse(colorHex)),
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: isSelected
-                                      ? AppColor.blanc
-                                      : Colors.transparent,
-                                  width: 3,
-                                ),
-                                boxShadow: isSelected
-                                    ? [
-                                        BoxShadow(
-                                          color: Colors.white.withValues(
-                                            alpha: 0.3,
-                                          ),
-                                          blurRadius: 6,
-                                        ),
-                                      ]
-                                    : null,
-                              ),
-                              child: isSelected
-                                  ? const Icon(
-                                      Icons.check,
-                                      color: AppColor.blanc,
-                                      size: 18,
-                                    )
-                                  : null,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text(
-                    "Annuler",
-                    style: TextStyle(color: Colors.white54),
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      final finalAmount = int.parse(
-                        amountController.text.trim(),
-                      );
-                      controller.createNewCard(
-                        currency: currentWallet.currency,
-                        color: selectedColor,
-                        amount: finalAmount,
-                      );
-                    }
-                  },
-                  child: const Text(
-                    "Créer",
-                    style: TextStyle(color: AppColor.blanc),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       final currentWallet = controller.selectedWallet.value;
+
+      double walletBalance = 0.0;
+      String walletCurrency = 'USD';
+
+      if (currentWallet != null) {
+        final activeWallet = controller.wallets.firstWhere(
+          (w) => w.id == currentWallet.id,
+          orElse: () => currentWallet,
+        );
+        walletBalance = activeWallet.balance;
+        walletCurrency = activeWallet.currency;
+      }
+
       final initialIndex = currentWallet != null
           ? controller.wallets.indexOf(currentWallet)
           : 0;
@@ -343,12 +159,11 @@ class Dashboard extends GetView<DashboardController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            currentWallet != null
-                                ? "${_getCurrencySymbol(currentWallet.currency)}${formatDouble(currentWallet.balance)}"
-                                : "0.00",
+                            "${_getCurrencySymbol(walletCurrency)}${formatDouble(walletBalance)}",
                             style: const TextStyle(
                               fontSize: 42,
                               color: AppColor.blanc,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -368,6 +183,7 @@ class Dashboard extends GetView<DashboardController> {
                                     child: FilledButton.icon(
                                       onPressed: () {
                                         showBottomSheet(
+                                          showDragHandle: true,
                                           context: context,
                                           builder: (context) {
                                             return currentWallet != null
@@ -379,19 +195,6 @@ class Dashboard extends GetView<DashboardController> {
                                                   );
                                           },
                                         );
-
-                                        // if (currentWallet != null) {
-                                        //   _showCreateCardDialog(
-                                        //     context,
-                                        //     currentWallet,
-                                        //   );
-                                        // } else {
-                                        //   Get.snackbar(
-                                        //     "Attention",
-                                        //     "Sélectionnez ou créez d'abord un portefeuille.",
-                                        //     snackPosition: SnackPosition.BOTTOM,
-                                        //   );
-                                        // }
                                       },
                                       style: FilledButton.styleFrom(
                                         backgroundColor: Colors.white24,
@@ -416,13 +219,7 @@ class Dashboard extends GetView<DashboardController> {
                                       ),
                                     );
                                   },
-                                  child: CartWidget(
-                                    color:
-                                        controller.selectedCard.value?.id ==
-                                            cardEntity.id
-                                        ? AppColor.blanc
-                                        : null,
-                                  ),
+                                  child: CartWidget(card: cardEntity),
                                 );
                               },
                             ),

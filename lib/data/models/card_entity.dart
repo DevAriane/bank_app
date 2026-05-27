@@ -2,8 +2,6 @@ import 'package:objectbox/objectbox.dart';
 import 'wallet_entity.dart';
 import 'transaction_entity.dart';
 
-enum CardVisualType { blanc, degrade, sombre }
-
 @Entity()
 class CardEntity {
   @Id()
@@ -13,12 +11,11 @@ class CardEntity {
   late String expiryDate;
   late String cvc;
   late String type;
-  late String themeColor;
+  late String themeColorLeft;
+  late String themeColorRight;
   late int amount;
 
   final wallet = ToOne<WalletEntity>();
-
-  // final CardVisualType visualType;
 
   @Backlink('card')
   final transactions = ToMany<TransactionEntity>();
@@ -28,8 +25,8 @@ class CardEntity {
     required this.expiryDate,
     required this.cvc,
     required this.type,
-    required this.themeColor,
+    required this.themeColorLeft,
+    required this.themeColorRight,
     required this.amount,
-    // required this.visualType,
   });
 }

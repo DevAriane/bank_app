@@ -14,12 +14,30 @@ class CardDetail extends StatefulWidget {
 }
 
 class _CardDetailState extends State<CardDetail> {
+  Color _parseColor(String? hexString, Color defaultColor) {
+    if (hexString == null || hexString.trim().isEmpty) return defaultColor;
+    try {
+      final int? colorValue = int.tryParse(hexString.trim());
+      if (colorValue != null) return Color(colorValue);
+    } catch (e) {
+      debugPrint("Erreur couleur : \$e");
+    }
+    return defaultColor;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final double calculatedBalance = widget.card.transactions.fold<double>(
-      0.0,
-      (sum, transaction) => sum + transaction.amount,
+    final Color couleurGauche = _parseColor(
+      widget.card.themeColorLeft,
+      const Color(0xFF5A9ECA),
     );
+    final Color couleurDroite = _parseColor(
+      widget.card.themeColorRight,
+      const Color(0xFF1E105C),
+    );
+
+    final int calculatedBalance = widget.card.amount;
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
@@ -70,15 +88,11 @@ class _CardDetailState extends State<CardDetail> {
                   height: 330,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    gradient: const LinearGradient(
+                    gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xFF5A9ECA),
-                        Color(0xFF1E105C),
-                        Color(0xFF05050A),
-                      ],
-                      stops: [0.4, 0.55, 1.0],
+                      colors: [couleurGauche, couleurDroite],
+                      stops: const [0.4, 0.55],
                     ),
                     boxShadow: [
                       BoxShadow(

@@ -32,28 +32,32 @@ class DashboardController extends GetxController {
   void _initDatabaseStreams() {
     final store = ObjectBoxService.to.store;
 
-    if (_walletBox.isEmpty()) {
-      _walletBox.putMany([
-        WalletEntity(currency: 'USD', balance: 2500.0),
-        WalletEntity(currency: 'EUR', balance: 1200.0),
-        WalletEntity(currency: 'CNY', balance: 8000.0),
-        WalletEntity(currency: 'CMR', balance: 120000.0),
-      ]);
-    }
+    _cardBox.removeAll();
+
+    _walletBox.removeAll();
+
+    _walletBox.putMany([
+      WalletEntity(currency: 'USD', balance: 2500.0),
+      WalletEntity(currency: 'EUR', balance: 1200.0),
+      WalletEntity(currency: 'CNY', balance: 8000.0),
+    ]);
 
     wallets.assignAll(_walletBox.getAll());
 
     final initialCards = _cardBox.getAll();
     cards.assignAll(initialCards);
 
-    if (initialCards.isNotEmpty) {
-      updateSelectedCard(initialCards.first);
-    } else {
-      if (wallets.isNotEmpty) {
-        selectedWallet.value = wallets.first;
+    if (wallets.isNotEmpty) {
+      selectedWallet.value = wallets.first;
+
+      if (wallets.first.cards.isNotEmpty) {
+        selectedCard.value = wallets.first.cards.first;
+      } else {
+        selectedCard.value = null;
       }
-      _updateTransactionsList();
     }
+
+    _updateTransactionsList();
 
     store.watch<WalletEntity>().listen((_) {
       wallets.assignAll(_walletBox.getAll());
@@ -71,7 +75,9 @@ class DashboardController extends GetxController {
 
   void _initWorkers() {
     ever(cards, (List<CardEntity> updatedCards) {
-      if (updatedCards.isNotEmpty && selectedCard.value == null) {
+      if (updatedCards.isNotEmpty &&
+          selectedCard.value == null &&
+          selectedWallet.value == null) {
         updateSelectedCard(updatedCards.first);
       }
     });
@@ -93,6 +99,8 @@ class DashboardController extends GetxController {
 
     if (wallet.cards.isNotEmpty) {
       selectedCard.value = wallet.cards.first;
+    } else {
+      selectedCard.value = null;
     }
     _updateTransactionsList();
   }
@@ -106,12 +114,15 @@ class DashboardController extends GetxController {
 
       filteredTransactions.assignAll(query.find());
       query.close();
+    } else {
+      filteredTransactions.clear();
     }
   }
 
   void createNewCard({
     required String currency,
-    required String color,
+    required String colorLeft,
+    required String colorRight,
     required int amount,
   }) {
     var wallet = _walletBox
@@ -131,12 +142,15 @@ class DashboardController extends GetxController {
 
     wallet.balance -= amount;
 
+    _walletBox.put(wallet);
+
     final newCard = CardEntity(
       cardNumber: "5231 7252 1769 ${1000 + cards.length}",
       expiryDate: "12/30",
       cvc: "123",
       type: "Debit",
-      themeColor: color,
+      themeColorLeft: colorLeft,
+      themeColorRight: colorRight,
       amount: amount,
     );
 

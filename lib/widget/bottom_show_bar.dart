@@ -2,18 +2,41 @@ import 'package:bank_app/common/app_color.dart';
 import 'package:bank_app/common/images_resources.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import '../data/models/wallet_entity.dart';
 import 'custom_card.dart';
+import '../modules/dashboard/controllers/dashboard_controller.dart';
 
-class BottomShowBar extends StatelessWidget {
+class BottomShowBar extends StatefulWidget {
   final WalletEntity? wallet;
   const BottomShowBar({super.key, required this.wallet});
 
   @override
+  State<BottomShowBar> createState() => _BottomShowBarState();
+}
+
+class _BottomShowBarState extends State<BottomShowBar> {
+  final DashboardController controller = Get.find<DashboardController>();
+
+  final TextEditingController _amountController = TextEditingController();
+
+  String _couleurGaucheChoisie = "0xff9e9e9e";
+  String _couleurDroiteChoisie = "0xff9e9e9e";
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final double currentBalance = wallet?.balance ?? 0.0;
-    final String currentCurrency = wallet?.currency ?? "";
+    final double currentBalance = widget.wallet?.balance ?? 0.0;
+    final String currentCurrency = widget.wallet?.currency ?? "";
+
     return BottomSheet(
+      enableDrag: false,
+      showDragHandle: false,
       onClosing: () {},
       shadowColor: AppColor.grisMoyen,
       backgroundColor: const Color.fromARGB(255, 239, 238, 238),
@@ -31,7 +54,7 @@ class BottomShowBar extends StatelessWidget {
                       height: 50,
                       padding: const EdgeInsets.all(6.0),
                       decoration: BoxDecoration(
-                        color: AppColor.blanc,
+                        color: Color(int.parse(_couleurGaucheChoisie)),
                         borderRadius: BorderRadius.circular(2),
                       ),
                       child: Column(
@@ -61,12 +84,13 @@ class BottomShowBar extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 10),
+
                   Expanded(
                     child: Container(
                       height: 50,
                       padding: const EdgeInsets.all(6.0),
                       decoration: BoxDecoration(
-                        color: AppColor.bleuSombre,
+                        color: Color(int.parse(_couleurDroiteChoisie)),
                         borderRadius: BorderRadius.circular(2),
                       ),
                       child: Column(
@@ -96,26 +120,36 @@ class BottomShowBar extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  Expanded(child: const CustomCard()),
+
+                  Expanded(
+                    child: CustomCard(
+                      onColorsSelected: (hexGauche, hexDroite) {
+                        setState(() {
+                          _couleurGaucheChoisie = hexGauche;
+                          _couleurDroiteChoisie = hexDroite;
+                        });
+                      },
+                    ),
+                  ),
                 ],
               ),
 
               const SizedBox(height: 10),
-              TextField(
+              InputDecorator(
                 decoration: InputDecoration(
-                  labelText:
-                      "Solde actuel: ${currentBalance}  ${currentCurrency}",
+                  labelText: "Solde actuel",
                   labelStyle: const TextStyle(color: AppColor.bleuSombre),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
                     borderSide: const BorderSide(color: AppColor.grisMoyen),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: const BorderSide(
-                      color: AppColor.bleuSombre,
-                      width: 2.0,
-                    ),
+                ),
+                child: Text(
+                  "$currentBalance  $currentCurrency",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
                   ),
                 ),
               ),
@@ -123,6 +157,8 @@ class BottomShowBar extends StatelessWidget {
               const SizedBox(height: 10),
 
               TextField(
+                controller: _amountController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   hintText: "Entrer le montant a alouer ",
                   labelStyle: const TextStyle(color: AppColor.grisArdoise),
@@ -136,6 +172,41 @@ class BottomShowBar extends StatelessWidget {
                       color: AppColor.bleuSombre,
                       width: 2.0,
                     ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColor.bleuSombre,
+                  ),
+                  onPressed: () {
+                    final String texteMontant = _amountController.text.trim();
+                    final int? montantSaisi = int.tryParse(texteMontant);
+
+                    if (montantSaisi == null || montantSaisi <= 0) {
+                      Get.snackbar(
+                        "Erreur",
+                        "Veuillez entrer un montant valide",
+                      );
+                      return;
+                    }
+
+                    controller.createNewCard(
+                      currency: currentCurrency,
+                      colorLeft: _couleurGaucheChoisie,
+                      colorRight: _couleurDroiteChoisie,
+                      amount: montantSaisi,
+                    );
+
+                    _amountController.clear();
+                  },
+                  child: const Text(
+                    "Creer",
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ),
