@@ -9,7 +9,7 @@ class TransactionEntity {
 
   late String title;
   late String category;
-  late double amount;
+  late int amount;
 
   @Property(type: PropertyType.date)
   late DateTime date;

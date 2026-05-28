@@ -88,7 +88,7 @@ class _CardDetailState extends State<CardDetail> {
       const Color(0xFF1E105C),
     );
 
-    final int calculatedBalance = widget.card.amount;
+    final double calculatedBalance = widget.card.amount.toDouble();
 
     return Scaffold(
       appBar: AppBar(

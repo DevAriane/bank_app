@@ -16,8 +16,8 @@ class _SendMoneyState extends State<SendMoney> {
   final DashboardController controller = Get.find<DashboardController>();
   final TextEditingController _amountController = TextEditingController();
 
-  CardEntity? _sourceCard;
-  CardEntity? _targetCard;
+  int? _sourceCardId;
+  int? _targetCardId;
 
   @override
   void dispose() {
@@ -25,39 +25,45 @@ class _SendMoneyState extends State<SendMoney> {
     super.dispose();
   }
 
-  // void _executerTransfert() {
-  //   final String texteMontant = _amountController.text.trim();
-  //   final double? montant = double.tryParse(texteMontant);
+  void _validerEtTransferer() {
+    final String texteMontant = _amountController.text.trim();
 
-  //   if (montant == null || montant <= 0) {
-  //     Get.snackbar("Erreur", "Veuillez entrer un montant valide");
-  //     return;
-  //   }
+    final double? montantSaisi = double.tryParse(texteMontant);
 
-  //   if (_sourceCard == null || _targetCard == null) {
-  //     Get.snackbar("Erreur", "Veuillez sélectionner les deux cartes");
-  //     return;
-  //   }
+    if (montantSaisi == null || montantSaisi <= 0) {
+      Get.snackbar("Erreur", "Veuillez entrer un montant valide");
+      return;
+    }
 
-  //   if (_sourceCard!.id == _targetCard!.id) {
-  //     Get.snackbar("Erreur", "Impossible de transférer sur la même carte");
-  //     return;
-  //   }
+    if (_sourceCardId == null || _targetCardId == null) {
+      Get.snackbar("Erreur", "Veuillez sélectionner les deux cartes");
+      return;
+    }
 
-  //   if (_sourceCard!.amount < montant) {
-  //     Get.snackbar("Erreur", "Solde insuffisant sur la carte de départ");
-  //     return;
-  //   }
+    if (_sourceCardId == _targetCardId) {
+      Get.snackbar("Erreur", "Impossible de transférer vers la même carte");
+      return;
+    }
 
-  //   controller.makeCardPayment(
-  //     title: "Transfert vers ${_targetCard!.cardNumber.substring(_targetCard!.cardNumber.length - 4)}",
-  //     category: "Transfert",
-  //     amount: -montant,
-  //   );
+    final card1 = controller.cards.firstWhere((c) => c.id == _sourceCardId);
+    final card2 = controller.cards.firstWhere((c) => c.id == _targetCardId);
 
-  //   Get.snackbar("Succès", "Transfert effectué avec succès");
-  //   Navigator.pop(context);
-  // }
+    if (card1.amount < montantSaisi) {
+      Get.snackbar("Erreur", "Solde insuffisant sur la carte initiale");
+      return;
+    }
+
+    controller.makeDepot(
+      amount: montantSaisi,
+      card1: card1,
+      card2: card2,
+      title: "Depot",
+    );
+
+    _amountController.clear();
+    Navigator.pop(context);
+    Get.snackbar("Succès", "Le transfert d'argent a été effectué");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,10 +82,19 @@ class _SendMoneyState extends State<SendMoney> {
             );
           }
 
-          _sourceCard ??= controller.cards.first;
-          _targetCard ??= controller.cards.length > 1
-              ? controller.cards[1]
-              : controller.cards.first;
+          _sourceCardId ??= controller.cards.first.id;
+          _targetCardId ??= controller.cards.length > 1
+              ? controller.cards[1].id
+              : controller.cards.first.id;
+
+          if (!controller.cards.any((c) => c.id == _sourceCardId)) {
+            _sourceCardId = controller.cards.first.id;
+          }
+          if (!controller.cards.any((c) => c.id == _targetCardId)) {
+            _targetCardId = controller.cards.length > 1
+                ? controller.cards[1].id
+                : controller.cards.first.id;
+          }
 
           return Padding(
             padding: const EdgeInsets.all(20),
@@ -104,18 +119,18 @@ class _SendMoneyState extends State<SendMoney> {
                     border: Border.all(color: AppColor.grisMoyen),
                   ),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton<CardEntity>(
-                      value: _sourceCard,
+                    child: DropdownButton<int>(
+                      value: _sourceCardId,
                       isExpanded: true,
                       items: controller.cards.map((CardEntity card) {
-                        return DropdownMenuItem<CardEntity>(
-                          value: card,
-                          child: Text("${card.name}"),
+                        return DropdownMenuItem<int>(
+                          value: card.id,
+                          child: Text(card.name),
                         );
                       }).toList(),
-                      onChanged: (CardEntity? newvalue) {
+                      onChanged: (int? newvalue) {
                         setState(() {
-                          _sourceCard = newvalue;
+                          _sourceCardId = newvalue;
                         });
                       },
                     ),
@@ -140,18 +155,18 @@ class _SendMoneyState extends State<SendMoney> {
                     border: Border.all(color: AppColor.grisMoyen),
                   ),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton<CardEntity>(
-                      value: _targetCard,
+                    child: DropdownButton<int>(
+                      value: _targetCardId,
                       isExpanded: true,
                       items: controller.cards.map((CardEntity card) {
-                        return DropdownMenuItem<CardEntity>(
-                          value: card,
-                          child: Text("${card.name}"),
+                        return DropdownMenuItem<int>(
+                          value: card.id,
+                          child: Text(card.name),
                         );
                       }).toList(),
-                      onChanged: (CardEntity? newvalue) {
+                      onChanged: (int? newvalue) {
                         setState(() {
-                          _targetCard = newvalue;
+                          _targetCardId = newvalue;
                         });
                       },
                     ),
@@ -186,7 +201,7 @@ class _SendMoneyState extends State<SendMoney> {
                     title: "valider",
                     fondColor: AppColor.bleuSombre,
                     textColor: AppColor.blanc,
-                    onpress: () {},
+                    onpress: () => _validerEtTransferer(),
                   ),
                 ),
               ],

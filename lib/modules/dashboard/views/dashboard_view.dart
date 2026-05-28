@@ -203,6 +203,7 @@ class Dashboard extends GetView<DashboardController> {
                                       onPressed: () {
                                         showBottomSheet(
                                           showDragHandle: false,
+                                          backgroundColor: Colors.transparent,
                                           context: context,
                                           builder: (context) {
                                             return currentWallet != null

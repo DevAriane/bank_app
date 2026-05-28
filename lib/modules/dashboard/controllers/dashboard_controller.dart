@@ -20,7 +20,6 @@ class DashboardController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
     _walletBox = ObjectBoxService.to.store.box<WalletEntity>();
     _cardBox = ObjectBoxService.to.store.box<CardEntity>();
     _transactionBox = ObjectBoxService.to.store.box<TransactionEntity>();
@@ -31,9 +30,7 @@ class DashboardController extends GetxController {
 
   void _initDatabaseStreams() {
     final store = ObjectBoxService.to.store;
-
     _cardBox.removeAll();
-
     _walletBox.removeAll();
 
     _walletBox.putMany([
@@ -43,13 +40,11 @@ class DashboardController extends GetxController {
     ]);
 
     wallets.assignAll(_walletBox.getAll());
-
     final initialCards = _cardBox.getAll();
     cards.assignAll(initialCards);
 
     if (wallets.isNotEmpty) {
       selectedWallet.value = wallets.first;
-
       if (wallets.first.cards.isNotEmpty) {
         selectedCard.value = wallets.first.cards.first;
       } else {
@@ -96,7 +91,6 @@ class DashboardController extends GetxController {
 
   void selectWalletDirectly(WalletEntity wallet) {
     selectedWallet.value = wallet;
-
     if (wallet.cards.isNotEmpty) {
       selectedCard.value = wallet.cards.first;
     } else {
@@ -111,7 +105,6 @@ class DashboardController extends GetxController {
           .query(TransactionEntity_.card.equals(selectedCard.value!.id))
           .order(TransactionEntity_.date, flags: Order.descending)
           .build();
-
       filteredTransactions.assignAll(query.find());
       query.close();
     } else {
@@ -142,7 +135,6 @@ class DashboardController extends GetxController {
     }
 
     wallet.balance -= amount;
-
     _walletBox.put(wallet);
 
     final newCard = CardEntity(
@@ -179,7 +171,7 @@ class DashboardController extends GetxController {
     final tx = TransactionEntity(
       title: title,
       category: category,
-      amount: amount,
+      amount: amount.toInt(),
       date: DateTime.now(),
     );
     tx.wallet.target = currentWallet;
@@ -189,6 +181,44 @@ class DashboardController extends GetxController {
       _walletBox.put(currentWallet);
       _transactionBox.put(tx);
     });
+  }
+
+  void makeDepot({
+    required CardEntity card1,
+    required CardEntity card2,
+    required String title,
+    required double amount,
+  }) {
+    if (card1.amount < amount) {
+      Get.snackbar(
+        "ERROR",
+        "Vous n'avez pas suffisamment d'argent dans votre carte ${card1.name}",
+      );
+      return;
+    }
+
+    card1.amount -= amount.toInt();
+    card2.amount += amount.toInt();
+
+    final tx = TransactionEntity(
+      title: "$title de ${card1.name} vers ${card2.name}",
+      category: "depot",
+      amount: -amount.toInt(),
+      date: DateTime.now(),
+    );
+
+    tx.card.target = card1;
+    if (card1.wallet.target != null) {
+      tx.wallet.target = card1.wallet.target;
+    }
+
+    ObjectBoxService.to.store.runInTransaction(TxMode.write, () {
+      _cardBox.put(card1);
+      _cardBox.put(card2);
+      _transactionBox.put(tx);
+    });
+
+    _updateTransactionsList();
   }
 
   void convertCurrency({
@@ -218,7 +248,7 @@ class DashboardController extends GetxController {
     final txSource = TransactionEntity(
       title: "Conversion $fromCurrency -> $toCurrency",
       category: "Exchange",
-      amount: -amountToConvert,
+      amount: -amountToConvert.toInt(),
       date: DateTime.now(),
     );
     txSource.wallet.target = sourceWallet;

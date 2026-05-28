@@ -4,110 +4,110 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:1983023830164191918",
-      "lastPropertyId": "11:2714198419137313831",
+      "id": "1:7294203278912535263",
+      "lastPropertyId": "10:7196431791788005202",
       "name": "CardEntity",
       "properties": [
         {
-          "id": "1:2991068622925773667",
+          "id": "1:406360522980952329",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:8939638582065041628",
+          "id": "2:1278014502427867151",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:3642373761968445367",
           "name": "cardNumber",
           "type": 9
         },
         {
-          "id": "3:1737532006504336279",
+          "id": "4:4040210673296528955",
           "name": "expiryDate",
           "type": 9
         },
         {
-          "id": "4:4712016485363287639",
+          "id": "5:2961721474683342987",
           "name": "cvc",
           "type": 9
         },
         {
-          "id": "5:2742521727171442863",
+          "id": "6:653186394879937189",
           "name": "type",
           "type": 9
         },
         {
-          "id": "7:7115492839038352350",
-          "name": "walletId",
-          "indexId": "1:5782537377068367520",
-          "type": 11,
-          "flags": 520,
-          "relationTarget": "WalletEntity"
-        },
-        {
-          "id": "8:171964542767835083",
-          "name": "amount",
-          "type": 6
-        },
-        {
-          "id": "9:3994105107040560353",
+          "id": "7:6872860465599697604",
           "name": "themeColorLeft",
           "type": 9
         },
         {
-          "id": "10:1227147406334190065",
+          "id": "8:674734636691694214",
           "name": "themeColorRight",
           "type": 9
         },
         {
-          "id": "11:2714198419137313831",
-          "name": "name",
-          "type": 9
+          "id": "9:4699407026245261479",
+          "name": "amount",
+          "type": 6
+        },
+        {
+          "id": "10:7196431791788005202",
+          "name": "walletId",
+          "indexId": "1:2679395087623741530",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "WalletEntity"
         }
       ],
       "relations": []
     },
     {
-      "id": "2:5824557919156728609",
-      "lastPropertyId": "7:8899025939104159919",
+      "id": "2:8405845501496351897",
+      "lastPropertyId": "7:885330659591125538",
       "name": "TransactionEntity",
       "properties": [
         {
-          "id": "1:5730433394771315683",
+          "id": "1:6884044121597165217",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:1826033378107106400",
+          "id": "2:711364835344185906",
           "name": "title",
           "type": 9
         },
         {
-          "id": "3:5705987176027675343",
+          "id": "3:5928978227556698560",
           "name": "category",
           "type": 9
         },
         {
-          "id": "4:7591427843480241122",
+          "id": "4:6856353562473210691",
           "name": "amount",
-          "type": 8
+          "type": 6
         },
         {
-          "id": "5:963323934833465662",
+          "id": "5:48158556657004386",
           "name": "date",
           "type": 10
         },
         {
-          "id": "6:5810493280506337437",
+          "id": "6:8527709645010927238",
           "name": "walletId",
-          "indexId": "2:2325352475308693927",
+          "indexId": "2:2819086357523483574",
           "type": 11,
           "flags": 520,
           "relationTarget": "WalletEntity"
         },
         {
-          "id": "7:8899025939104159919",
+          "id": "7:885330659591125538",
           "name": "cardId",
-          "indexId": "3:2359422876437590617",
+          "indexId": "3:6986592335168565988",
           "type": 11,
           "flags": 520,
           "relationTarget": "CardEntity"
@@ -116,25 +116,25 @@
       "relations": []
     },
     {
-      "id": "3:7375780381033129542",
-      "lastPropertyId": "3:6668714892371084669",
+      "id": "3:403647302459754055",
+      "lastPropertyId": "3:8023747797973970952",
       "name": "WalletEntity",
       "properties": [
         {
-          "id": "1:2853411333254262377",
+          "id": "1:7759552919467893654",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:7483766484453442312",
+          "id": "2:6149512195982182675",
           "name": "currency",
-          "indexId": "4:8068262949654632148",
+          "indexId": "4:4739506470426563856",
           "type": 9,
           "flags": 2080
         },
         {
-          "id": "3:6668714892371084669",
+          "id": "3:8023747797973970952",
           "name": "balance",
           "type": 8
         }
@@ -142,17 +142,15 @@
       "relations": []
     }
   ],
-  "lastEntityId": "3:7375780381033129542",
-  "lastIndexId": "4:8068262949654632148",
+  "lastEntityId": "3:403647302459754055",
+  "lastIndexId": "4:4739506470426563856",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [
-    5769820451099573428
-  ],
+  "retiredPropertyUids": [],
   "retiredRelationUids": [],
   "version": 1
 }

@@ -128,7 +128,7 @@ class _BottomShowBarState extends State<BottomShowBar>
                     onpress: () {
                       final String nom = _nameController.text.trim();
                       final String texteMontant = _amountController.text.trim();
-                      final int? montantSaisi = int.tryParse(texteMontant);
+                      final int? montantSaisi =int.tryParse(texteMontant);
 
                       if (montantSaisi == null || montantSaisi <= 0) {
                         Get.snackbar(

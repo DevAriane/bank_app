@@ -31,6 +31,8 @@ class _CardBottomSheetState extends State<CardBottomSheet> {
     _couleurDroiteLocale = widget.couleurDroite;
   }
 
+  int? idWidgetSelectionne;
+
   @override
   void didUpdateWidget(covariant CardBottomSheet oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -54,104 +56,18 @@ class _CardBottomSheetState extends State<CardBottomSheet> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(
-          child: InkWell(
-            onTap: () {
-              const Color blanc = Color(0xFFFFFFFF);
-              setState(() {
-                _couleurGaucheLocale = blanc;
-                _couleurDroiteLocale = blanc;
-              });
-
-              widget.onColorsUpdated(_colorToHex(blanc), _colorToHex(blanc));
-            },
-            child: Container(
-              height: 50,
-              padding: const EdgeInsets.all(6.0),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFFFFF),
-                borderRadius: BorderRadius.circular(2),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    alignment: Alignment.topRight,
-                    child: SvgPicture.asset(
-                      ImagesResources.logo,
-                      height: 12,
-                      colorFilter: const ColorFilter.mode(
-                        AppColor.bleuSombre,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.bottomLeft,
-                    child: Image.asset(
-                      ImagesResources.card,
-                      height: 18,
-                      color: AppColor.grisClair,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+        _element(
+          id: 1,
+          couleurGauche: const Color(0xFFFFFFFF),
+          couleurDroite: const Color(0xFFFFFFFF),
         ),
 
         const SizedBox(width: 10),
 
-        Expanded(
-          child: InkWell(
-            onTap: () {
-              const Color bleuFonce = Color(0xFF131D47);
-              const Color bleuClair = Color(0xFF3876B4);
-              setState(() {
-                _couleurGaucheLocale = bleuFonce;
-                _couleurDroiteLocale = bleuClair;
-              });
-
-              widget.onColorsUpdated(
-                _colorToHex(bleuFonce),
-                _colorToHex(bleuClair),
-              );
-            },
-            child: Container(
-              height: 50,
-              padding: const EdgeInsets.all(6.0),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF131D47), Color(0xFF3876B4)],
-                ),
-                borderRadius: BorderRadius.circular(2),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    alignment: Alignment.topRight,
-                    child: SvgPicture.asset(
-                      ImagesResources.logo,
-                      height: 12,
-                      colorFilter: const ColorFilter.mode(
-                        AppColor.blanc,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.bottomLeft,
-                    child: Image.asset(
-                      ImagesResources.card,
-                      height: 18,
-                      color: AppColor.grisClair,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+        _element(
+          id: 2,
+          couleurGauche: const Color(0xFF131D47),
+          couleurDroite: const Color(0xFF3876B4),
         ),
 
         const SizedBox(width: 10),
@@ -169,6 +85,73 @@ class _CardBottomSheetState extends State<CardBottomSheet> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _element({
+    required int id,
+
+    required Color couleurGauche,
+    required Color couleurDroite,
+  }) {
+    bool hadBorder = (idWidgetSelectionne == id);
+    return Expanded(
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            idWidgetSelectionne = (idWidgetSelectionne == id) ? null : id;
+            _couleurGaucheLocale = couleurGauche;
+            _couleurDroiteLocale = couleurDroite;
+          });
+
+          widget.onColorsUpdated(
+            _colorToHex(couleurGauche),
+            _colorToHex(couleurDroite),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: hadBorder ? Colors.blue : Colors.transparent,
+              width: 3,
+            ),
+          ),
+          child: Container(
+            height: 50,
+            padding: const EdgeInsets.all(6.0),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [couleurGauche, couleurDroite]),
+              borderRadius: BorderRadius.circular(2),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  alignment: Alignment.topRight,
+                  child: SvgPicture.asset(
+                    ImagesResources.logo,
+                    height: 12,
+                    colorFilter: const ColorFilter.mode(
+                      AppColor.bleuSombre,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.bottomLeft,
+                  child: Image.asset(
+                    ImagesResources.card,
+                    height: 18,
+                    color: AppColor.grisClair,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
