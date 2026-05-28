@@ -120,6 +120,7 @@ class DashboardController extends GetxController {
   }
 
   void createNewCard({
+    required String name,
     required String currency,
     required String colorLeft,
     required String colorRight,
@@ -145,6 +146,7 @@ class DashboardController extends GetxController {
     _walletBox.put(wallet);
 
     final newCard = CardEntity(
+      name: name,
       cardNumber: "5231 7252 1769 ${1000 + cards.length}",
       expiryDate: "12/30",
       cvc: "123",

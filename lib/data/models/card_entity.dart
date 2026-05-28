@@ -6,7 +6,7 @@ import 'transaction_entity.dart';
 class CardEntity {
   @Id()
   int id = 0;
-
+  late String name;
   late String cardNumber;
   late String expiryDate;
   late String cvc;
@@ -21,6 +21,7 @@ class CardEntity {
   final transactions = ToMany<TransactionEntity>();
 
   CardEntity({
+    required this.name,
     required this.cardNumber,
     required this.expiryDate,
     required this.cvc,

@@ -4,22 +4,21 @@ import 'package:flutter_svg/flutter_svg.dart';
 class CardActions extends StatelessWidget {
   final String title;
   final String image;
-  final VoidCallback? onTap;
+  final VoidCallback? onpress;
 
   const CardActions({
     super.key,
     required this.title,
     required this.image,
-    this.onTap,
+    this.onpress,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onpress,
       child: Container(
         width: 80,
-
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),
@@ -39,7 +38,7 @@ class CardActions extends StatelessWidget {
                 child: image.isNotEmpty
                     ? SvgPicture.asset(
                         image,
-                        height: 6,
+                        height: 10,
 
                         colorFilter: ColorFilter.mode(
                           const Color(0XFFFFFFFF).withValues(alpha: 0.9),

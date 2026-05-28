@@ -10,6 +10,7 @@ import '../../../utils/number_format.dart';
 import '../../../common/card_action.dart';
 import '../../.././widget/bottom_show_bar.dart';
 import '../../card_detail.dart';
+import '../../../widget/send_money.dart';
 
 class Dashboard extends GetView<DashboardController> {
   const Dashboard({super.key});
@@ -39,14 +40,32 @@ class Dashboard extends GetView<DashboardController> {
   @override
   DashboardController get controller => Get.put(DashboardController());
 
-  List<dynamic> get localActionCard => [
-    _ActionModel(title: 'Transfer', image: ImagesResources.logo),
-    _ActionModel(title: 'Top Up', image: ImagesResources.logo),
-    _ActionModel(title: 'Bill', image: ImagesResources.logo),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final List<dynamic> localActionCard = [
+      _ActionModel(title: 'ADD', image: ImagesResources.add, onpress: () {}),
+      _ActionModel(
+        title: 'SEND',
+        image: ImagesResources.send,
+        onpress: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            showDragHandle: true,
+            backgroundColor: Colors.transparent,
+            builder: (context) {
+              return const SendMoney();
+            },
+          );
+        },
+      ),
+      _ActionModel(
+        title: 'CONVERT',
+        image: ImagesResources.convert,
+        onpress: () {},
+      ),
+      _ActionModel(title: 'MORE', image: ImagesResources.more, onpress: () {}),
+    ];
     return Obx(() {
       final currentWallet = controller.selectedWallet.value;
 
@@ -76,7 +95,7 @@ class Dashboard extends GetView<DashboardController> {
             bottom: _buildTabBar(),
 
             backgroundColor: AppColor.noir,
-
+            automaticallyImplyLeading: false,
             title: SearchBar(
               constraints: const BoxConstraints(
                 minHeight: 33.0,
@@ -183,7 +202,7 @@ class Dashboard extends GetView<DashboardController> {
                                     child: FilledButton.icon(
                                       onPressed: () {
                                         showBottomSheet(
-                                          showDragHandle: true,
+                                          showDragHandle: false,
                                           context: context,
                                           builder: (context) {
                                             return currentWallet != null
@@ -224,7 +243,6 @@ class Dashboard extends GetView<DashboardController> {
                               },
                             ),
                           ),
-
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               vertical: 20,
@@ -236,18 +254,14 @@ class Dashboard extends GetView<DashboardController> {
                                 scrollDirection: Axis.horizontal,
                                 itemCount: localActionCard.length,
                                 separatorBuilder: (context, index) =>
-                                    const SizedBox(width: 15),
+                                    const SizedBox(width: 5),
                                 itemBuilder: (context, index) {
                                   final action = localActionCard[index];
 
                                   return CardActions(
                                     title: action.title,
                                     image: action.image,
-                                    onTap: () {
-                                      debugPrint(
-                                        "Action cliquée : ${action.title}",
-                                      );
-                                    },
+                                    onpress: action.onpress,
                                   );
                                 },
                               ),
@@ -394,5 +408,10 @@ class Dashboard extends GetView<DashboardController> {
 class _ActionModel {
   final String title;
   final String image;
-  _ActionModel({required this.title, required this.image});
+  final VoidCallback? onpress;
+  _ActionModel({
+    required this.title,
+    required this.image,
+    required this.onpress,
+  });
 }

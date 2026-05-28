@@ -24,7 +24,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(1, 1983023830164191918),
     name: 'CardEntity',
-    lastPropertyId: const obx_int.IdUid(10, 1227147406334190065),
+    lastPropertyId: const obx_int.IdUid(11, 2714198419137313831),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -81,6 +81,12 @@ final _entities = <obx_int.ModelEntity>[
       obx_int.ModelProperty(
         id: const obx_int.IdUid(10, 1227147406334190065),
         name: 'themeColorRight',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(11, 2714198419137313831),
+        name: 'name',
         type: 9,
         flags: 0,
       ),
@@ -272,7 +278,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final typeOffset = fbb.writeString(object.type);
         final themeColorLeftOffset = fbb.writeString(object.themeColorLeft);
         final themeColorRightOffset = fbb.writeString(object.themeColorRight);
-        fbb.startTable(11);
+        final nameOffset = fbb.writeString(object.name);
+        fbb.startTable(12);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, cardNumberOffset);
         fbb.addOffset(2, expiryDateOffset);
@@ -282,12 +289,16 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addInt64(7, object.amount);
         fbb.addOffset(8, themeColorLeftOffset);
         fbb.addOffset(9, themeColorRightOffset);
+        fbb.addOffset(10, nameOffset);
         fbb.finish(fbb.endTable());
         return object.id;
       },
       objectFromFB: (obx.Store store, ByteData fbData) {
         final buffer = fb.BufferContext(fbData);
         final rootOffset = buffer.derefObject(0);
+        final nameParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 24, '');
         final cardNumberParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGet(buffer, rootOffset, 6, '');
@@ -313,6 +324,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           0,
         );
         final object = CardEntity(
+          name: nameParam,
           cardNumber: cardNumberParam,
           expiryDate: expiryDateParam,
           cvc: cvcParam,
@@ -521,6 +533,11 @@ class CardEntity_ {
   /// See [CardEntity.themeColorRight].
   static final themeColorRight = obx.QueryStringProperty<CardEntity>(
     _entities[0].properties[8],
+  );
+
+  /// See [CardEntity.name].
+  static final name = obx.QueryStringProperty<CardEntity>(
+    _entities[0].properties[9],
   );
 
   /// see [CardEntity.transactions]

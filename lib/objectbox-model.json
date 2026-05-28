@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:1983023830164191918",
-      "lastPropertyId": "10:1227147406334190065",
+      "lastPropertyId": "11:2714198419137313831",
       "name": "CardEntity",
       "properties": [
         {
@@ -55,6 +55,11 @@
         {
           "id": "10:1227147406334190065",
           "name": "themeColorRight",
+          "type": 9
+        },
+        {
+          "id": "11:2714198419137313831",
+          "name": "name",
           "type": 9
         }
       ],

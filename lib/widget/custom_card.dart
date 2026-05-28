@@ -10,19 +10,18 @@ class CustomCard extends StatefulWidget {
 }
 
 class _CustomCardState extends State<CustomCard> {
+  double teinteGauche = 0.0;
+  double teinteDroite = 180.0;
+
   String _colorToHex(Color color) {
     final String a = (color.a * 255).toInt().toRadixString(16).padLeft(2, '0');
     final String r = (color.r * 255).toInt().toRadixString(16).padLeft(2, '0');
     final String g = (color.g * 255).toInt().toRadixString(16).padLeft(2, '0');
     final String b = (color.b * 255).toInt().toRadixString(16).padLeft(2, '0');
-
     return '0x$a$r$g$b';
   }
 
   void showPop(BuildContext context) {
-    double teinteGauche = 0.0;
-    double teinteDroite = 180.0;
-
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -100,9 +99,8 @@ class _CustomCardState extends State<CustomCard> {
                       },
                     ),
                     const SizedBox(height: 20),
-
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
