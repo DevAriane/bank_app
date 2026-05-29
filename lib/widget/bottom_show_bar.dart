@@ -55,6 +55,7 @@ class _BottomShowBarState extends State<BottomShowBar>
       animationController: _animationController,
       onClosing: () {},
       shadowColor: AppColor.grisMoyen,
+      
       backgroundColor: const Color.fromARGB(255, 239, 238, 238),
       builder: (context) {
         return SingleChildScrollView(

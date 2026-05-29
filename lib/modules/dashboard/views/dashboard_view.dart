@@ -13,6 +13,7 @@ import '../../card_detail.dart';
 import '../../../widget/send_money.dart';
 import '../../../common/transaction_list.dart';
 import '../../../widget/add_money_card.dart';
+import '../../../widget/convert_currency.dart';
 
 class Dashboard extends GetView<DashboardController> {
   const Dashboard({super.key});
@@ -72,10 +73,11 @@ class Dashboard extends GetView<DashboardController> {
             showModalBottomSheet(
               context: context,
               isScrollControlled: true,
-              showDragHandle: true,
+              useSafeArea: true,
+              showDragHandle: false,
               backgroundColor: Colors.transparent,
               builder: (context) {
-                return AddMoneyCard(currency: walletCurrency);
+                return SafeArea(child: AddMoneyCard(currency: walletCurrency));
               },
             );
           },
@@ -87,10 +89,11 @@ class Dashboard extends GetView<DashboardController> {
             showModalBottomSheet(
               context: context,
               isScrollControlled: true,
-              showDragHandle: true,
+              useSafeArea: true,
+              showDragHandle: false,
               backgroundColor: Colors.transparent,
               builder: (context) {
-                return const SendMoney();
+                return const SafeArea(child: SendMoney());
               },
             );
           },
@@ -98,7 +101,18 @@ class Dashboard extends GetView<DashboardController> {
         _ActionModel(
           title: 'CONVERT',
           image: ImagesResources.convert,
-          onpress: () {},
+          onpress: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              useSafeArea: true,
+              showDragHandle: false,
+              backgroundColor: Colors.transparent,
+              builder: (context) {
+                return const SafeArea(child: ConvertCurrency());
+              },
+            );
+          },
         ),
         _ActionModel(
           title: 'MORE',
@@ -211,29 +225,33 @@ class Dashboard extends GetView<DashboardController> {
                           SizedBox(
                             height: 30,
                             child: ListView.separated(
-                              itemCount: controller.cards.length + 1,
+                              itemCount: controller.filteredCards.length + 1,
                               separatorBuilder: (context, index) =>
                                   const SizedBox(width: 10),
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
-                                if (index == controller.cards.length) {
+                                if (index == controller.filteredCards.length) {
                                   return SizedBox(
                                     height: double.infinity,
                                     width: 30,
                                     child: FilledButton.icon(
                                       onPressed: () {
-                                        showBottomSheet(
+                                        showModalBottomSheet(
                                           showDragHandle: false,
+                                          useSafeArea: true,
                                           backgroundColor: Colors.transparent,
                                           context: context,
+                                          isScrollControlled: true,
                                           builder: (context) {
-                                            return currentWallet != null
-                                                ? BottomShowBar(
-                                                    wallet: currentWallet,
-                                                  )
-                                                : const BottomShowBar(
-                                                    wallet: null,
-                                                  );
+                                            return SafeArea(
+                                              child: currentWallet != null
+                                                  ? BottomShowBar(
+                                                      wallet: currentWallet,
+                                                    )
+                                                  : const BottomShowBar(
+                                                      wallet: null,
+                                                    ),
+                                            );
                                           },
                                         );
                                       },
@@ -249,7 +267,8 @@ class Dashboard extends GetView<DashboardController> {
                                   );
                                 }
 
-                                final cardEntity = controller.cards[index];
+                                final cardEntity =
+                                    controller.filteredCards[index];
                                 return GestureDetector(
                                   onTap: () {
                                     Navigator.push(
@@ -302,7 +321,7 @@ class Dashboard extends GetView<DashboardController> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         vertical: 20,
-                        horizontal: 10,
+                        horizontal: 7,
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,

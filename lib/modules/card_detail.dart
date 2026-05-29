@@ -39,7 +39,7 @@ class _CardDetailState extends State<CardDetail> {
     super.initState();
 
     final String currentCurrency = widget.card.wallet.target?.currency ?? "";
-    _walletCards = _controller.cards
+    _walletCards = _controller.filteredCards
         .where((c) => c.wallet.target?.currency == currentCurrency)
         .toList();
 
@@ -117,9 +117,6 @@ class _CardDetailState extends State<CardDetail> {
                 width: double.infinity,
                 height: 150,
                 decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(20),
-                  ),
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,

@@ -8,10 +8,10 @@ class HistoryTransaction extends GetView<DashboardController> {
 
   @override
   Widget build(BuildContext context) {
-    final activeFilter = 'All'.obs;
+    final RxString activeFilter = 'All'.obs;
 
     return Scaffold(
-      backgroundColor: AppColor.blanc,
+      backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: AppColor.noir,
@@ -19,7 +19,7 @@ class HistoryTransaction extends GetView<DashboardController> {
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             color: AppColor.blanc,
-            size: 20,
+            size: 18,
           ),
           onPressed: () => Get.back(),
         ),
@@ -28,7 +28,8 @@ class HistoryTransaction extends GetView<DashboardController> {
           style: TextStyle(
             color: AppColor.blanc,
             fontSize: 18,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.3,
           ),
         ),
         centerTitle: true,
@@ -38,28 +39,45 @@ class HistoryTransaction extends GetView<DashboardController> {
           children: [
             Obx(
               () => Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 15,
-                  horizontal: 16,
+                width: double.infinity,
+                padding: const EdgeInsets.only(
+                  bottom: 20,
+                  left: 16,
+                  right: 16,
+                  top: 4,
                 ),
-                color: AppColor.noir,
+                decoration: const BoxDecoration(
+                  color: AppColor.noir,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24),
+                  ),
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildFilterChip(
-                      "All",
-                      activeFilter.value == "All",
-                      () => activeFilter.value = "All",
+                    Expanded(
+                      child: _buildFilterChip(
+                        "All",
+                        activeFilter.value == "All",
+                        () => activeFilter.value = "All",
+                      ),
                     ),
-                    _buildFilterChip(
-                      "Income",
-                      activeFilter.value == "Income",
-                      () => activeFilter.value = "Income",
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: _buildFilterChip(
+                        "Income",
+                        activeFilter.value == "Income",
+                        () => activeFilter.value = "Income",
+                      ),
                     ),
-                    _buildFilterChip(
-                      "Expense",
-                      activeFilter.value == "Expense",
-                      () => activeFilter.value = "Expense",
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: _buildFilterChip(
+                        "Expense",
+                        activeFilter.value == "Expense",
+                        () => activeFilter.value = "Expense",
+                      ),
                     ),
                   ],
                 ),
@@ -68,7 +86,7 @@ class HistoryTransaction extends GetView<DashboardController> {
 
             Expanded(
               child: Obx(() {
-                final allTransactions = controller.cards
+                final allTransactions = controller.filteredCards
                     .expand((card) => card.transactions)
                     .toList();
 
@@ -81,21 +99,37 @@ class HistoryTransaction extends GetView<DashboardController> {
                 filteredTransactions.sort((a, b) => b.id.compareTo(a.id));
 
                 if (filteredTransactions.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.receipt_long_rounded,
-                          size: 60,
-                          color: Color(0xFF8D99AE),
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.withValues(alpha: 0.05),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.receipt_long_rounded,
+                            size: 64,
+                            color: Color(0xFFA0AABF),
+                          ),
                         ),
-                        SizedBox(height: 16),
-                        Text(
+                        const SizedBox(height: 16),
+                        const Text(
                           "No transactions found",
                           style: TextStyle(
                             color: Color(0xFF8D99AE),
                             fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "Try switching your active filter tab",
+                          style: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 13,
                           ),
                         ),
                       ],
@@ -103,87 +137,129 @@ class HistoryTransaction extends GetView<DashboardController> {
                   );
                 }
 
-                return ListView.separated(
-                  padding: const EdgeInsets.all(16),
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 20,
+                  ),
                   itemCount: filteredTransactions.length,
-                  separatorBuilder: (context, index) =>
-                      const Divider(height: 24, color: Color(0xFFE4DDD5)),
                   itemBuilder: (context, index) {
                     final tx = filteredTransactions[index];
                     final isIncome = tx.amount > 0;
 
-                    return Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: isIncome
-                                ? const Color(0xFF2ECC71).withValues(alpha: 0.1)
-                                : const Color(
-                                    0xFFE74C3C,
-                                  ).withValues(alpha: 0.1),
-                            shape: BoxShape.circle,
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.02),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
                           ),
-                          child: Icon(
-                            isIncome
-                                ? Icons.arrow_downward_rounded
-                                : Icons.arrow_upward_rounded,
-                            color: isIncome
-                                ? const Color(0xFF2ECC71)
-                                : const Color(0xFFE74C3C),
-                            size: 20,
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                tx.title,
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                  color: Color(0xFF1D3557),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                tx.category,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Color(0xFF8D99AE),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(14),
+                        child: Row(
                           children: [
-                            Text(
-                              "${isIncome ? '+' : ''}\$${tx.amount.abs().toStringAsFixed(2)}",
-                              style: TextStyle(
-                                fontSize: 15,
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
                                 color: isIncome
-                                    ? const Color(0xFF2ECC71)
-                                    : const Color(0xFF1D3557),
-                                fontWeight: FontWeight.bold,
+                                    ? const Color(
+                                        0xFF3876B4,
+                                      ).withValues(alpha: 0.1)
+                                    : const Color(
+                                        0xFF131D47,
+                                      ).withValues(alpha: 0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                isIncome
+                                    ? Icons.arrow_downward_rounded
+                                    : Icons.arrow_upward_rounded,
+                                color: isIncome
+                                    ? const Color(0xFF3876B4)
+                                    : const Color(0xFF131D47),
+                                size: 18,
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            const Text(
-                              "Successful",
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Color(0xFF8D99AE),
+                            const SizedBox(width: 14),
+
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    tx.title,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Color(0xFF1F2937),
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    tx.category,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey[500],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+
+                            Expanded(
+                              flex: 2,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "${isIncome ? '+' : '-'} ${tx.amount.abs().toStringAsFixed(2)}",
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: isIncome
+                                          ? const Color(0xFF3876B4)
+                                          : const Color(0xFF1F2937),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.check_circle_rounded,
+                                        size: 11,
+                                        color: Color(0xFF2ECC71),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        "Success",
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: Colors.grey[400],
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     );
                   },
                 );
@@ -199,19 +275,23 @@ class HistoryTransaction extends GetView<DashboardController> {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.fastOutSlowIn,
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isSelected ? AppColor.blanc : Colors.white10,
-          borderRadius: BorderRadius.circular(20),
+          color: isSelected
+              ? AppColor.blanc
+              : Colors.white.withValues(alpha: 0.07),
+          borderRadius: BorderRadius.circular(14),
         ),
         child: Text(
           label,
           style: TextStyle(
             color: isSelected
                 ? AppColor.noir
-                : AppColor.blanc.withValues(alpha: 0.7),
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                : AppColor.blanc.withValues(alpha: 0.6),
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             fontSize: 13,
           ),
         ),

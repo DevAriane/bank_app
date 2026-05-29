@@ -40,7 +40,9 @@ class _AddMoneyCardState extends State<AddMoneyCard> {
       return;
     }
 
-    final card1 = controller.cards.firstWhere((c) => c.id == _sourceCardId);
+    final card1 = controller.filteredCards.firstWhere(
+      (c) => c.id == _sourceCardId,
+    );
 
     controller.addmoneytocardfromwallet(
       card: card1,
@@ -58,22 +60,22 @@ class _AddMoneyCardState extends State<AddMoneyCard> {
   Widget build(BuildContext context) {
     return BottomSheet(
       enableDrag: false,
-      showDragHandle: false,
+      showDragHandle: true,
       onClosing: () {},
       shadowColor: AppColor.grisMoyen,
       backgroundColor: const Color.fromARGB(255, 239, 238, 238),
       builder: (context) {
         return Obx(() {
-          if (controller.cards.isEmpty) {
+          if (controller.filteredCards.isEmpty) {
             return const Padding(
               padding: EdgeInsets.all(20),
               child: Center(child: Text("aucune carte disponible")),
             );
           }
-          _sourceCardId ??= controller.cards.first.id;
+          _sourceCardId ??= controller.filteredCards.first.id;
 
-          if (!controller.cards.any((c) => c.id == _sourceCardId)) {
-            _sourceCardId = controller.cards.first.id;
+          if (!controller.filteredCards.any((c) => c.id == _sourceCardId)) {
+            _sourceCardId = controller.filteredCards.first.id;
           }
           return Padding(
             padding: EdgeInsets.only(
@@ -106,7 +108,7 @@ class _AddMoneyCardState extends State<AddMoneyCard> {
                     child: DropdownButton<int>(
                       value: _sourceCardId,
                       isExpanded: true,
-                      items: controller.cards.map((CardEntity card) {
+                      items: controller.filteredCards.map((CardEntity card) {
                         return DropdownMenuItem<int>(
                           value: card.id,
                           child: Text(card.name),

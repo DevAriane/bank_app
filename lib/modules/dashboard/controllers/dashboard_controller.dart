@@ -5,6 +5,7 @@ import '../../../data/models/wallet_entity.dart';
 import '../../../data/models/card_entity.dart';
 import '../../../data/models/transaction_entity.dart';
 import 'package:bank_app/objectbox.g.dart';
+import 'package:bank_app/currency.dart';
 
 class DashboardController extends GetxController {
   late final Box<WalletEntity> _walletBox;
@@ -14,6 +15,7 @@ class DashboardController extends GetxController {
   final wallets = <WalletEntity>[].obs;
   final cards = <CardEntity>[].obs;
   final filteredTransactions = <TransactionEntity>[].obs;
+  final filteredCards = <CardEntity>[].obs;
 
   final selectedCard = Rxn<CardEntity>();
   final selectedWallet = Rxn<WalletEntity>();
@@ -67,10 +69,11 @@ class DashboardController extends GetxController {
   }
 
   void _initWorkers() {
-    ever(selectedCard, (CardEntity? card) {
-      if (card != null && card.wallet.target != null) {
-        selectedWallet.value = card.wallet.target;
-      }
+    ever(selectedWallet, (_) {
+      _updateCardsAndSelection();
+    });
+
+    ever(selectedCard, (_) {
       _updateTransactionsList();
     });
   }
@@ -78,12 +81,14 @@ class DashboardController extends GetxController {
   void _updateCardsAndSelection() {
     if (selectedWallet.value != null) {
       final currentWalletId = selectedWallet.value!.id;
+
       final walletCards = cards
           .where((c) => c.wallet.target?.id == currentWalletId)
           .toList();
 
+      filteredCards.assignAll(walletCards);
+
       if (walletCards.isNotEmpty) {
-        // Si la carte sélectionnée actuelle ne fait pas partie du portefeuille, on prend la première
         if (selectedCard.value == null ||
             selectedCard.value!.wallet.target?.id != currentWalletId) {
           selectedCard.value = walletCards.first;
@@ -91,6 +96,9 @@ class DashboardController extends GetxController {
       } else {
         selectedCard.value = null;
       }
+    } else {
+      filteredCards.clear();
+      selectedCard.value = null;
     }
     _updateTransactionsList();
   }
@@ -211,7 +219,7 @@ class DashboardController extends GetxController {
     card2.amount += amount.toInt();
 
     final tx = TransactionEntity(
-      title: "$title de ${card1.name} vers ${card2.name}",
+      title: "$title ${card1.name} vers ${card2.name}",
       category: "depot",
       amount: -amount.toInt(),
       date: DateTime.now(),
@@ -271,38 +279,50 @@ class DashboardController extends GetxController {
     required String fromCurrency,
     required String toCurrency,
     required double amountToConvert,
-    required double rate,
+    required WalletEntity sourceWallet,
+    required WalletEntity targetWallet,
+    required CardEntity sourceCard,
+    required CardEntity targetCard,
   }) {
-    final sourceWallet = _walletBox
-        .query(WalletEntity_.currency.equals(fromCurrency))
-        .build()
-        .findFirst();
-    final targetWallet = _walletBox
-        .query(WalletEntity_.currency.equals(toCurrency))
-        .build()
-        .findFirst();
-
-    if (sourceWallet == null ||
-        targetWallet == null ||
-        sourceWallet.balance < amountToConvert) {
+    if (sourceCard.amount < amountToConvert) {
+      Get.snackbar(
+        "Erreur",
+        "Le solde de votre carte initiale est insuffisant",
+      );
       return;
     }
 
+    double convertedAmount = executeConversion(
+      amount: amountToConvert,
+      fromCurrency: fromCurrency,
+      toCurrency: toCurrency,
+    );
+
     sourceWallet.balance -= amountToConvert;
-    targetWallet.balance += (amountToConvert * rate);
+    sourceCard.amount -= amountToConvert.toInt();
+    targetCard.amount += convertedAmount.toInt();
+    targetWallet.balance += convertedAmount.toInt();
 
     final txSource = TransactionEntity(
-      title: "Conversion $fromCurrency -> $toCurrency",
+      title:
+          "Conversion ${sourceCard.name} ($fromCurrency) ➔ ${targetCard.name} ($toCurrency)",
       category: "Exchange",
       amount: -amountToConvert.toInt(),
       image: ImagesResources.convert,
       date: DateTime.now(),
     );
     txSource.wallet.target = sourceWallet;
+    txSource.card.target = sourceCard;
 
     ObjectBoxService.to.store.runInTransaction(TxMode.write, () {
-      _walletBox.putMany([sourceWallet, targetWallet]);
+      _cardBox.put(sourceCard);
+      _cardBox.put(targetCard);
+      _walletBox.put(sourceWallet);
+      _walletBox.put(targetWallet);
       _transactionBox.put(txSource);
     });
+
+    Get.back();
+    Get.snackbar("Succès", "Conversion effectuée avec succès !");
   }
 }

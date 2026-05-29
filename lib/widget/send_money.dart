@@ -45,8 +45,12 @@ class _SendMoneyState extends State<SendMoney> {
       return;
     }
 
-    final card1 = controller.cards.firstWhere((c) => c.id == _sourceCardId);
-    final card2 = controller.cards.firstWhere((c) => c.id == _targetCardId);
+    final card1 = controller.filteredCards.firstWhere(
+      (c) => c.id == _sourceCardId,
+    );
+    final card2 = controller.filteredCards.firstWhere(
+      (c) => c.id == _targetCardId,
+    );
 
     if (card1.amount < montantSaisi) {
       Get.snackbar("Erreur", "Solde insuffisant sur la carte initiale");
@@ -57,7 +61,7 @@ class _SendMoneyState extends State<SendMoney> {
       amount: montantSaisi,
       card1: card1,
       card2: card2,
-      title: "Depot",
+      title: "Retrait",
     );
 
     _amountController.clear();
@@ -69,31 +73,31 @@ class _SendMoneyState extends State<SendMoney> {
   Widget build(BuildContext context) {
     return BottomSheet(
       enableDrag: false,
-      showDragHandle: false,
+      showDragHandle: true,
       onClosing: () {},
       shadowColor: AppColor.grisMoyen,
       backgroundColor: const Color.fromARGB(255, 239, 238, 238),
       builder: (context) {
         return Obx(() {
-          if (controller.cards.isEmpty) {
+          if (controller.filteredCards.isEmpty) {
             return const Padding(
               padding: EdgeInsets.all(20),
               child: Center(child: Text("aucune carte disponible")),
             );
           }
 
-          _sourceCardId ??= controller.cards.first.id;
-          _targetCardId ??= controller.cards.length > 1
-              ? controller.cards[1].id
-              : controller.cards.first.id;
+          _sourceCardId ??= controller.filteredCards.first.id;
+          _targetCardId ??= controller.filteredCards.length > 1
+              ? controller.filteredCards[1].id
+              : controller.filteredCards.first.id;
 
-          if (!controller.cards.any((c) => c.id == _sourceCardId)) {
-            _sourceCardId = controller.cards.first.id;
+          if (!controller.filteredCards.any((c) => c.id == _sourceCardId)) {
+            _sourceCardId = controller.filteredCards.first.id;
           }
-          if (!controller.cards.any((c) => c.id == _targetCardId)) {
-            _targetCardId = controller.cards.length > 1
-                ? controller.cards[1].id
-                : controller.cards.first.id;
+          if (!controller.filteredCards.any((c) => c.id == _targetCardId)) {
+            _targetCardId = controller.filteredCards.length > 1
+                ? controller.filteredCards[1].id
+                : controller.filteredCards.first.id;
           }
 
           return Padding(
@@ -128,7 +132,7 @@ class _SendMoneyState extends State<SendMoney> {
                     child: DropdownButton<int>(
                       value: _sourceCardId,
                       isExpanded: true,
-                      items: controller.cards.map((CardEntity card) {
+                      items: controller.filteredCards.map((CardEntity card) {
                         return DropdownMenuItem<int>(
                           value: card.id,
                           child: Text(card.name),
@@ -164,7 +168,7 @@ class _SendMoneyState extends State<SendMoney> {
                     child: DropdownButton<int>(
                       value: _targetCardId,
                       isExpanded: true,
-                      items: controller.cards.map((CardEntity card) {
+                      items: controller.filteredCards.map((CardEntity card) {
                         return DropdownMenuItem<int>(
                           value: card.id,
                           child: Text(card.name),
