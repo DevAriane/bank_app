@@ -11,6 +11,8 @@ import '../../../common/card_action.dart';
 import '../../.././widget/bottom_show_bar.dart';
 import '../../card_detail.dart';
 import '../../../widget/send_money.dart';
+import '../../../common/transaction_list.dart';
+import '../../../widget/add_money_card.dart';
 
 class Dashboard extends GetView<DashboardController> {
   const Dashboard({super.key});
@@ -42,30 +44,6 @@ class Dashboard extends GetView<DashboardController> {
 
   @override
   Widget build(BuildContext context) {
-    final List<dynamic> localActionCard = [
-      _ActionModel(title: 'ADD', image: ImagesResources.add, onpress: () {}),
-      _ActionModel(
-        title: 'SEND',
-        image: ImagesResources.send,
-        onpress: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            showDragHandle: true,
-            backgroundColor: Colors.transparent,
-            builder: (context) {
-              return const SendMoney();
-            },
-          );
-        },
-      ),
-      _ActionModel(
-        title: 'CONVERT',
-        image: ImagesResources.convert,
-        onpress: () {},
-      ),
-      _ActionModel(title: 'MORE', image: ImagesResources.more, onpress: () {}),
-    ];
     return Obx(() {
       final currentWallet = controller.selectedWallet.value;
 
@@ -85,6 +63,49 @@ class Dashboard extends GetView<DashboardController> {
           ? controller.wallets.indexOf(currentWallet)
           : 0;
       final safeIndex = initialIndex != -1 ? initialIndex : 0;
+
+      final List<dynamic> localActionCard = [
+        _ActionModel(
+          title: 'ADD',
+          image: ImagesResources.add,
+          onpress: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              showDragHandle: true,
+              backgroundColor: Colors.transparent,
+              builder: (context) {
+                return AddMoneyCard(currency: walletCurrency);
+              },
+            );
+          },
+        ),
+        _ActionModel(
+          title: 'SEND',
+          image: ImagesResources.send,
+          onpress: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              showDragHandle: true,
+              backgroundColor: Colors.transparent,
+              builder: (context) {
+                return const SendMoney();
+              },
+            );
+          },
+        ),
+        _ActionModel(
+          title: 'CONVERT',
+          image: ImagesResources.convert,
+          onpress: () {},
+        ),
+        _ActionModel(
+          title: 'MORE',
+          image: ImagesResources.more,
+          onpress: () {},
+        ),
+      ];
 
       return DefaultTabController(
         key: ValueKey(controller.wallets.length + safeIndex),
@@ -319,18 +340,7 @@ class Dashboard extends GetView<DashboardController> {
                             ],
                           ),
                           const SizedBox(height: 4),
-
-                          // ListView.separated(
-                          //   shrinkWrap: true,
-                          //   physics: const NeverScrollableScrollPhysics(),
-                          //   itemCount: controller.cards.length,
-                          //   separatorBuilder: (context, index) =>
-                          //       const SizedBox(height: 20),
-                          //   itemBuilder: (context, index) {
-                          //     final currentCard = controller.cards[index];
-                          //     return TransactionList(card: currentCard);
-                          //   },
-                          // ),
+                          const TransactionList(),
                         ],
                       ),
                     ),

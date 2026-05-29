@@ -103,7 +103,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(2, 8405845501496351897),
     name: 'TransactionEntity',
-    lastPropertyId: const obx_int.IdUid(7, 885330659591125538),
+    lastPropertyId: const obx_int.IdUid(8, 4501805818212693930),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -153,6 +153,12 @@ final _entities = <obx_int.ModelEntity>[
         indexId: const obx_int.IdUid(3, 6986592335168565988),
         relationField: 'card',
         relationTarget: 'CardEntity',
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(8, 4501805818212693930),
+        name: 'image',
+        type: 9,
+        flags: 0,
       ),
     ],
     relations: <obx_int.ModelRelation>[],
@@ -366,7 +372,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
       objectToFB: (TransactionEntity object, fb.Builder fbb) {
         final titleOffset = fbb.writeString(object.title);
         final categoryOffset = fbb.writeString(object.category);
-        fbb.startTable(8);
+        final imageOffset = fbb.writeString(object.image);
+        fbb.startTable(9);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, titleOffset);
         fbb.addOffset(2, categoryOffset);
@@ -374,6 +381,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addInt64(4, object.date.millisecondsSinceEpoch);
         fbb.addInt64(5, object.wallet.targetId);
         fbb.addInt64(6, object.card.targetId);
+        fbb.addOffset(7, imageOffset);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -395,11 +403,15 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final dateParam = DateTime.fromMillisecondsSinceEpoch(
           const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0),
         );
+        final imageParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 18, '');
         final object = TransactionEntity(
           title: titleParam,
           category: categoryParam,
           amount: amountParam,
           date: dateParam,
+          image: imageParam,
         )..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
         object.wallet.targetId = const fb.Int64Reader().vTableGet(
           buffer,
@@ -582,6 +594,11 @@ class TransactionEntity_ {
   /// See [TransactionEntity.card].
   static final card = obx.QueryRelationToOne<TransactionEntity, CardEntity>(
     _entities[1].properties[6],
+  );
+
+  /// See [TransactionEntity.image].
+  static final image = obx.QueryStringProperty<TransactionEntity>(
+    _entities[1].properties[7],
   );
 }
 

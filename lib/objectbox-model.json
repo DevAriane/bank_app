@@ -67,7 +67,7 @@
     },
     {
       "id": "2:8405845501496351897",
-      "lastPropertyId": "7:885330659591125538",
+      "lastPropertyId": "8:4501805818212693930",
       "name": "TransactionEntity",
       "properties": [
         {
@@ -111,6 +111,11 @@
           "type": 11,
           "flags": 520,
           "relationTarget": "CardEntity"
+        },
+        {
+          "id": "8:4501805818212693930",
+          "name": "image",
+          "type": 9
         }
       ],
       "relations": []
